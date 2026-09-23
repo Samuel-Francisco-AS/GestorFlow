@@ -9,13 +9,13 @@ import {
 } from 'lucide-react'
 
 import {
-  demoCustomers,
   demoOrders,
   formatCurrency,
   formatDate,
   orderStatusLabel,
   type DemoOrderStatus,
 } from '@/data/demo'
+import { useCustomers } from '@/features/customers/customer-context'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 
@@ -36,10 +36,10 @@ function StatusBadge({ status }: { status: DemoOrderStatus }) {
   )
 }
 
-const customerName = (id: string) =>
-  demoCustomers.find((customer) => customer.id === id)?.name ?? 'Cliente'
-
 export function DashboardPage() {
+  const { customers } = useCustomers()
+  const customerName = (id: string) =>
+    customers.find((customer) => customer.id === id)?.name ?? 'Cliente'
   const inProgress = demoOrders.filter(
     (order) => order.status === 'in_progress',
   ).length

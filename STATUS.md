@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-1 — Gate técnico concluído; revisão visual pendente
+**Fase:** GF-2 — Gate técnico concluído; revisão visual pendente
 
-**Próxima fase:** GF-2 — Gestão mockada de clientes
+**Próxima fase:** GF-3 — Ordens de serviço, ainda não iniciada
 
 **MVP:** em execução
 **Deploy:** inexistente  
@@ -95,7 +95,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | --- | --- | ---: | --- |
 | GF-0 | Fundação técnica | 0,5–1 dia | Implementada; pendente de revisão |
 | GF-1 | Shell visual | 1 dia | Gate técnico concluído; revisão visual pendente |
-| GF-2 | Clientes | 1–1,5 dia | Pendente |
+| GF-2 | Clientes | 1–1,5 dia | Gate técnico concluído; revisão visual pendente |
 | GF-3 | Ordens | 1,5–2 dias | Pendente |
 | GF-4 | Persistência | 1 dia | Pendente |
 | GF-5 | Dashboard real | 0,5–1 dia | Pendente |
@@ -107,11 +107,13 @@ Teto absoluto: **14 dias**.
 
 ## Gate atual
 
-GF-1 substituiu a página técnica por shell desktop/mobile e dashboard com dados demonstrativos centralizados em `src/data/demo.ts`. A navegação de Clientes e Ordens indica indisponibilidade até suas etapas. A ação Nova ordem permanece desabilitada. `@types/node` foi alinhado à linha 24.x para o runtime Node 24. A avaliação visual final cabe ao usuário.
+GF-1 substituiu a página técnica por shell desktop/mobile e dashboard com dados demonstrativos centralizados em `src/data/demo.ts`. `@types/node` foi alinhado à linha 24.x para o runtime Node 24.
+
+GF-2 implementou listagem, pesquisa, ficha de leitura, cadastro e edição de clientes. O modelo contém id, nome, telefone, e-mail, observações e data de criação. React Hook Form e Zod validam o formulário. O estado em memória é compartilhado entre Clientes e dashboard; alterações são perdidas ao recarregar. O histórico de ordens permanece demonstrativo e estático. A navegação de Ordens e a ação Nova ordem seguem indisponíveis. A avaliação visual final cabe ao usuário.
 
 ## Próximo passo
 
-Implementar **GF-2 — Clientes** após registrar o gate e commit GF-1. A persistência real permanece planejada para GF-4.
+Revisar visualmente GF-1 e GF-2. GF-3 permanece não iniciada; a persistência real está planejada para GF-4.
 
 A primeira implementação deve preservar a prioridade do projeto:
 

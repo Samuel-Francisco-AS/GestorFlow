@@ -8,7 +8,7 @@ const links = [
     mobile: 'Clientes',
     to: '/clientes',
     icon: UsersRound,
-    disabled: true,
+    disabled: false,
   },
   {
     label: 'Ordens de serviço',

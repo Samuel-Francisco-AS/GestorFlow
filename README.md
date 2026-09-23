@@ -128,9 +128,9 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-1 — Shell responsivo e dashboard demonstrativo implementados; revisão visual pendente.
+**Fase atual:** GF-2 — Gestão demonstrativa de clientes implementada; revisão visual pendente.
 
-A pré-concepção do produto e o baseline documental do MVP estão definidos. A página inicial apresenta indicadores e ordens fictícios de setembro de 2026. A gestão de clientes começa em GF-2.
+A página inicial apresenta indicadores e ordens fictícios de setembro de 2026. Em Clientes, é possível pesquisar, abrir fichas, cadastrar e editar registros. As alterações ficam apenas na memória da sessão e são perdidas ao recarregar a aplicação. A persistência real pertence à GF-4.
 
 ## Execução local
 
@@ -141,7 +141,7 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. A ação de criar ordem e os destinos ainda não implementados são apresentados como indisponíveis.
+Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. Clientes está disponível com dados mockados. A ação de criar ordem e o destino Ordens de serviço são apresentados como indisponíveis até GF-3.
 
 ```bash
 npm run build
