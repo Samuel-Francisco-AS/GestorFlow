@@ -1,18 +1,15 @@
 import { ArrowLeft, Mail, Phone, Pencil, Plus } from 'lucide-react'
 import { Link, useLocation, useParams } from 'react-router'
 
-import {
-  demoOrders,
-  formatCurrency,
-  formatDate,
-  orderStatusLabel,
-} from '@/data/demo'
+import { formatCurrency, formatDate, orderStatusLabel } from '@/data/demo'
 import { useCustomers } from '@/features/customers/customer-context'
+import { useWorkOrders } from '@/features/work-orders/work-order-context'
 import { Button } from '@/shared/ui/button'
 
 export function CustomerDetailPage() {
   const { id } = useParams()
   const { customers } = useCustomers()
+  const { orders: allOrders } = useWorkOrders()
   const location = useLocation()
   const customer = customers.find((item) => item.id === id)
 
@@ -29,7 +26,7 @@ export function CustomerDetailPage() {
       </section>
     )
 
-  const orders = demoOrders.filter((order) => order.customerId === customer.id)
+  const orders = allOrders.filter((order) => order.customerId === customer.id)
   return (
     <div>
       <Link
@@ -112,20 +109,21 @@ export function CustomerDetailPage() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                Histórico demonstrativo
+                Histórico de serviços
               </p>
               <h2 id="history-title" className="mt-1 font-display text-2xl">
                 Ordens relacionadas
               </h2>
             </div>
-            <Button type="button" disabled aria-describedby="order-hint">
-              <Plus aria-hidden="true" />
-              Nova ordem
+            <Button asChild>
+              <Link
+                to={`/ordens/nova?cliente=${encodeURIComponent(customer.id)}`}
+              >
+                <Plus aria-hidden="true" />
+                Nova ordem
+              </Link>
             </Button>
           </div>
-          <p id="order-hint" className="mt-2 text-xs text-muted-foreground">
-            Criação de ordens disponível em uma próxima etapa.
-          </p>
           {orders.length ? (
             <ul className="mt-5 divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface">
               {orders.map((order) => (
@@ -133,8 +131,13 @@ export function CustomerDetailPage() {
                   key={order.id}
                   className="flex flex-wrap items-center justify-between gap-3 p-5"
                 >
-                  <div>
-                    <p className="text-sm font-semibold">{order.title}</p>
+                  <div className="min-w-0">
+                    <Link
+                      to={`/ordens/${order.id}`}
+                      className="text-sm font-semibold text-primary hover:underline"
+                    >
+                      {order.title}
+                    </Link>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {order.id} · {formatDate(order.date)} ·{' '}
                       {orderStatusLabel[order.status]}
@@ -148,7 +151,7 @@ export function CustomerDetailPage() {
             </ul>
           ) : (
             <div className="mt-5 rounded-lg border border-border bg-surface p-6 text-sm text-muted-foreground">
-              Nenhuma ordem demonstrativa para este cliente.
+              Nenhuma ordem para este cliente.
             </div>
           )}
         </section>

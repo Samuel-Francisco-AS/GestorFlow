@@ -15,7 +15,7 @@ const links = [
     mobile: 'Ordens',
     to: '/ordens',
     icon: ClipboardList,
-    disabled: true,
+    disabled: false,
   },
 ]
 

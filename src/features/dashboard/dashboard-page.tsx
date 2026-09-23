@@ -18,6 +18,7 @@ import {
 import { useCustomers } from '@/features/customers/customer-context'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
+import { Link } from 'react-router'
 
 const statusStyles: Record<DemoOrderStatus, string> = {
   new: 'bg-muted text-foreground',
@@ -67,13 +68,12 @@ export function DashboardPage() {
           </p>
         </div>
         <div className="shrink-0">
-          <Button type="button" disabled aria-describedby="new-order-hint">
-            <Plus aria-hidden="true" />
-            Nova ordem
+          <Button asChild>
+            <Link to="/ordens/nova">
+              <Plus aria-hidden="true" />
+              Nova ordem
+            </Link>
           </Button>
-          <p id="new-order-hint" className="mt-2 text-xs text-muted-foreground">
-            Disponível em uma próxima etapa.
-          </p>
         </div>
       </section>
 

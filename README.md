@@ -128,9 +128,9 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-2 — Gestão demonstrativa de clientes implementada; revisão visual pendente.
+**Fase atual:** GF-3 — Ordens de serviço tecnicamente implementadas; revisão visual humana pendente.
 
-A página inicial apresenta indicadores e ordens fictícios de setembro de 2026. Em Clientes, é possível pesquisar, abrir fichas, cadastrar e editar registros. As alterações ficam apenas na memória da sessão e são perdidas ao recarregar a aplicação. A persistência real pertence à GF-4.
+A página inicial mantém indicadores e ordens demonstrativos de setembro de 2026. Em Clientes, é possível pesquisar, abrir fichas, cadastrar e editar registros. Em Ordens, é possível pesquisar, filtrar por status, abrir detalhes, criar, editar e alterar o status. A ficha do cliente mostra suas ordens atuais e permite iniciar uma nova ordem com o cliente preenchido. As alterações ficam apenas na memória da sessão e são perdidas ao recarregar a aplicação. A persistência real, com Supabase, pertence à GF-4; o dashboard derivado dos dados atuais pertence à GF-5.
 
 ## Execução local
 
@@ -141,7 +141,7 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. Clientes está disponível com dados mockados. A ação de criar ordem e o destino Ordens de serviço são apresentados como indisponíveis até GF-3.
+Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. Clientes e Ordens de serviço estão disponíveis com dados em memória. O botão Nova ordem do dashboard abre a criação de OS; suas métricas e listas continuam demonstrativas nesta fase.
 
 ```bash
 npm run build

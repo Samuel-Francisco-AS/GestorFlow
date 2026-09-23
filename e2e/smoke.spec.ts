@@ -11,7 +11,10 @@ test('dashboard, shell desktop e rota desconhecida', async ({ page }) => {
   await expect(
     page.getByRole('navigation', { name: 'Navegação principal' }),
   ).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Nova ordem' })).toBeDisabled()
+  await expect(page.getByRole('link', { name: 'Nova ordem' })).toBeVisible()
+  await page.getByRole('link', { name: 'Nova ordem' }).click()
+  await expect(page.getByRole('heading', { name: 'Nova ordem' })).toBeVisible()
+  await page.getByRole('link', { name: 'Voltar', exact: true }).click()
   await page
     .getByRole('link', { name: 'GestorFlow, voltar ao início' })
     .first()

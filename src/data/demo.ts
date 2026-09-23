@@ -1,4 +1,10 @@
-export type DemoOrderStatus = 'new' | 'in_progress' | 'waiting' | 'completed'
+import {
+  workOrderStatusLabel,
+  type WorkOrder,
+  type WorkOrderStatus,
+} from '@/features/work-orders/model'
+
+export type DemoOrderStatus = WorkOrderStatus
 
 export const demoCustomers = [
   {
@@ -43,18 +49,14 @@ export const demoCustomers = [
   },
 ]
 
-export const demoOrders: {
-  id: string
-  customerId: string
-  title: string
-  status: DemoOrderStatus
-  value: number
-  date: string
-}[] = [
+export const demoOrders: WorkOrder[] = [
   {
     id: 'OS-1048',
     customerId: 'marina',
     title: 'Identidade visual',
+    description:
+      'Criação de identidade visual para materiais digitais e impressos.',
+    notes: 'Apresentar propostas iniciais na próxima reunião.',
     status: 'in_progress',
     value: 1850,
     date: '2026-09-22',
@@ -63,6 +65,8 @@ export const demoOrders: {
     id: 'OS-1047',
     customerId: 'aurora',
     title: 'Manutenção de equipamentos',
+    description: 'Revisão preventiva dos equipamentos do café.',
+    notes: 'Aguardando confirmação de horário.',
     status: 'waiting',
     value: 640,
     date: '2026-09-20',
@@ -71,6 +75,8 @@ export const demoOrders: {
     id: 'OS-1046',
     customerId: 'joao',
     title: 'Instalação de rede',
+    description: 'Instalação e configuração da rede do escritório.',
+    notes: '',
     status: 'in_progress',
     value: 980,
     date: '2026-09-18',
@@ -79,6 +85,8 @@ export const demoOrders: {
     id: 'OS-1045',
     customerId: 'estrela',
     title: 'Atualização do site',
+    description: 'Atualização das páginas de serviços e contato.',
+    notes: '',
     status: 'completed',
     value: 2200,
     date: '2026-09-14',
@@ -87,6 +95,8 @@ export const demoOrders: {
     id: 'OS-1044',
     customerId: 'ana',
     title: 'Material de divulgação',
+    description: 'Produção de peças para divulgação da nova campanha.',
+    notes: '',
     status: 'completed',
     value: 760,
     date: '2026-09-09',
@@ -95,6 +105,8 @@ export const demoOrders: {
     id: 'OS-1043',
     customerId: 'ana',
     title: 'Revisão de peças digitais',
+    description: 'Ajustes nas peças digitais existentes.',
+    notes: 'Aguardando retorno sobre as versões enviadas.',
     status: 'waiting',
     value: 420,
     date: '2026-09-05',
@@ -113,9 +125,4 @@ export const formatDate = (value: string) =>
     timeZone: 'UTC',
   }).format(new Date(`${value}T12:00:00Z`))
 
-export const orderStatusLabel: Record<DemoOrderStatus, string> = {
-  new: 'Novo',
-  in_progress: 'Em andamento',
-  waiting: 'Aguardando',
-  completed: 'Concluído',
-}
+export const orderStatusLabel = workOrderStatusLabel

@@ -6,6 +6,9 @@ import { CustomersPage } from '@/features/customers/pages/customers-page'
 import { CustomerDetailPage } from '@/features/customers/pages/customer-detail-page'
 import { CustomerFormPage } from '@/features/customers/pages/customer-form-page'
 import { NotFoundPage } from '@/app/router/not-found-page'
+import { WorkOrdersPage } from '@/features/work-orders/pages/work-orders-page'
+import { WorkOrderDetailPage } from '@/features/work-orders/pages/work-order-detail-page'
+import { WorkOrderFormPage } from '@/features/work-orders/pages/work-order-form-page'
 
 export function AppRouter() {
   return (
@@ -21,6 +24,16 @@ export function AppRouter() {
         <Route
           path="clientes/:id/editar"
           element={<CustomerFormPage mode="edit" />}
+        />
+        <Route path="ordens" element={<WorkOrdersPage />} />
+        <Route
+          path="ordens/nova"
+          element={<WorkOrderFormPage mode="create" />}
+        />
+        <Route path="ordens/:id" element={<WorkOrderDetailPage />} />
+        <Route
+          path="ordens/:id/editar"
+          element={<WorkOrderFormPage mode="edit" />}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
