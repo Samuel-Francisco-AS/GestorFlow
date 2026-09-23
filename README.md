@@ -128,7 +128,7 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-4 — Persistência e Auth implementados; GF-5 (dashboard derivado dos dados correntes) pendente.
+**Fase atual:** GF-5 — Dashboard derivado dos dados correntes; revisão visual humana pendente.
 
 Há dois caminhos de acesso: **Explorar demonstração**, com dados locais descartáveis e CRUD funcional, e **Entrar/Criar conta**, com Supabase Auth e dados privados persistidos no PostgreSQL. A demo dispensa configuração e permanece funcional sem Supabase. Recarregar a página reinicia o dataset demo.
 
@@ -153,7 +153,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-O schema remoto existente está registrado em `supabase/migrations/20260923175233_gf4_initial_persistence_schema.sql` para versionamento e instalações futuras. Não aplique essa migration novamente ao projeto já configurado. RLS limita leitura, criação e atualização ao proprietário; o MVP não inclui exclusão. A UI usa repositories demo/Supabase sob contratos comuns e TanStack Query para consultas, mutations e invalidação. O dashboard ainda usa métricas demonstrativas até GF-5.
+O schema remoto existente está registrado em `supabase/migrations/20260923175233_gf4_initial_persistence_schema.sql` para versionamento e instalações futuras. Não aplique essa migration novamente ao projeto já configurado. RLS limita leitura, criação e atualização ao proprietário; o MVP não inclui exclusão. A UI usa repositories demo/Supabase sob contratos comuns e TanStack Query para consultas, mutations e invalidação. O dashboard deriva métricas, ordens recentes e atenção das ordens correntes, tanto na demo quanto em contas persistentes.
 
 ## Licença
 

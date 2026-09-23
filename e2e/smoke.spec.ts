@@ -5,7 +5,9 @@ test('dashboard, shell desktop e rota desconhecida', async ({ page }) => {
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
   await page.getByRole('button', { name: 'Explorar demonstração' }).click()
-  await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: /(Bom dia|Boa tarde|Boa noite)/ }),
+  ).toBeVisible()
   await expect(
     page.getByRole('heading', { name: 'Ordens recentes' }),
   ).toBeVisible()
@@ -43,7 +45,9 @@ for (const width of [360, 390]) {
     await page.setViewportSize({ width, height: 780 })
     await page.goto('/')
     await page.getByRole('button', { name: 'Explorar demonstração' }).click()
-    await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /(Bom dia|Boa tarde|Boa noite)/ }),
+    ).toBeVisible()
     await expect(
       page.getByRole('navigation', { name: 'Navegação mobile' }),
     ).toBeVisible()
@@ -97,5 +101,7 @@ test('entrada oferece autenticação e cadastro sem depender de serviço remoto'
   await expect(page.getByRole('heading', { name: 'Criar conta' })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar' }).click()
   await page.getByRole('button', { name: 'Explorar demonstração' }).click()
-  await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: /(Bom dia|Boa tarde|Boa noite)/ }),
+  ).toBeVisible()
 })

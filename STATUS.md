@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-4 — Gate técnico concluído; revisão visual humana pendente
+**Fase:** GF-5 — Gate técnico concluído; revisão visual humana pendente
 
-**Próxima fase:** GF-5 — Dashboard real
+**Próxima fase:** GF-6 — Polish
 
 **MVP:** em execução
 **Deploy:** inexistente  
@@ -98,7 +98,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | GF-2 | Clientes | 1–1,5 dia | Gate técnico concluído; revisão visual pendente |
 | GF-3 | Ordens | 1,5–2 dias | Gate técnico concluído; revisão visual pendente |
 | GF-4 | Persistência | 1 dia | Gate técnico concluído; revisão visual pendente |
-| GF-5 | Dashboard real | 0,5–1 dia | Pendente |
+| GF-5 | Dashboard real | 0,5–1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-6 | Polish | 1–2 dias | Pendente |
 | GF-7 | Demo & deploy | 0,5–1 dia | Pendente |
 
@@ -115,11 +115,15 @@ GF-3 implementou modelo e store em memória para ordens, lista com pesquisa e fi
 
 ## GF-4
 
-Supabase Auth por e-mail e senha, entrada demo sem cadastro e recuperação de sessão estão integrados. Os contratos de CustomerRepository e WorkOrderRepository têm implementações locais e Supabase. A UI acessa as entidades pelos providers com TanStack Query; RLS protege clientes e ordens do usuário autenticado. A migration do schema remoto existente foi versionada localmente, sem alteração remota. O MVP não permite DELETE. Variáveis públicas: `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`; sem elas, a demo continua disponível. GF-5 permanece pendente: o dashboard ainda usa métricas fixas de demonstração.
+Supabase Auth por e-mail e senha, entrada demo sem cadastro e recuperação de sessão estão integrados. Os contratos de CustomerRepository e WorkOrderRepository têm implementações locais e Supabase. A UI acessa as entidades pelos providers com TanStack Query; RLS protege clientes e ordens do usuário autenticado. A migration do schema remoto existente foi versionada localmente, sem alteração remota. O MVP não permite DELETE. Variáveis públicas: `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`; sem elas, a demo continua disponível. O dashboard ainda usava métricas demonstrativas nesta fase.
+
+## GF-5
+
+O dashboard usa as ordens e clientes correntes fornecidos pelos mesmos contratos de dados da demo e da conta persistente. Em andamento, aguardando, concluídas e faturamento do mês são calculados das ordens atuais; recentes têm ordenação estável, e atenção inclui ordens aguardando. Mutations invalidam as queries, atualizando o dashboard sem reload. A data e a saudação usam o relógio local. Os números deixam de depender de `demoOrders` estático.
 
 ## Próximo passo
 
-Executar GF-5 para derivar o dashboard dos dados correntes.
+GF-6 — Polish, após revisão visual humana das fases anteriores.
 
 A primeira implementação deve preservar a prioridade do projeto:
 

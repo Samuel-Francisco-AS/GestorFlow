@@ -1,6 +1,4 @@
 import {
-  ArrowDownRight,
-  ArrowUpRight,
   CircleAlert,
   ClipboardList,
   Clock3,
@@ -8,26 +6,25 @@ import {
   CheckCheck,
 } from 'lucide-react'
 
+import { formatCurrency, formatDate } from '@/data/demo'
 import {
-  demoOrders,
-  formatCurrency,
-  formatDate,
-  orderStatusLabel,
-  type DemoOrderStatus,
-} from '@/data/demo'
+  workOrderStatusLabel as orderStatusLabel,
+  type WorkOrderStatus,
+} from '@/features/work-orders/model'
 import { useCustomers } from '@/features/customers/customer-context'
-import { Badge } from '@/shared/ui/badge'
+import { useWorkOrders } from '@/features/work-orders/work-order-context'
+import { deriveDashboardMetrics } from '@/features/dashboard/metrics'
 import { Button } from '@/shared/ui/button'
 import { Link } from 'react-router'
 
-const statusStyles: Record<DemoOrderStatus, string> = {
+const statusStyles: Record<WorkOrderStatus, string> = {
   new: 'bg-muted text-foreground',
   in_progress: 'bg-primary-soft text-primary',
   waiting: 'bg-accent-soft text-accent-foreground',
   completed: 'bg-[#e8eee3] text-[#41613e]',
 }
 
-function StatusBadge({ status }: { status: DemoOrderStatus }) {
+function StatusBadge({ status }: { status: WorkOrderStatus }) {
   return (
     <span
       className={`inline-flex w-fit rounded-sm px-2.5 py-1 text-xs font-semibold ${statusStyles[status]}`}
@@ -38,29 +35,56 @@ function StatusBadge({ status }: { status: DemoOrderStatus }) {
 }
 
 export function DashboardPage() {
-  const { customers } = useCustomers()
+  const {
+    customers,
+    loading: customersLoading,
+    error: customersError,
+  } = useCustomers()
+  const { orders, loading: ordersLoading, error: ordersError } = useWorkOrders()
+  const now = new Date()
+  const {
+    inProgress,
+    waiting,
+    completedThisMonth,
+    revenueThisMonth,
+    attention,
+    recent,
+  } = deriveDashboardMetrics(orders, now)
   const customerName = (id: string) =>
     customers.find((customer) => customer.id === id)?.name ?? 'Cliente'
-  const inProgress = demoOrders.filter(
-    (order) => order.status === 'in_progress',
-  ).length
-  const waiting = demoOrders.filter(
-    (order) => order.status === 'waiting',
-  ).length
-  const completed = demoOrders.filter(
-    (order) => order.status === 'completed' && order.date.startsWith('2026-09'),
-  )
-  const attention = demoOrders.filter((order) => order.status === 'waiting')
+  const greeting =
+    now.getHours() < 12
+      ? 'Bom dia'
+      : now.getHours() < 18
+        ? 'Boa tarde'
+        : 'Boa noite'
+  const dateLabel = new Intl.DateTimeFormat('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(now)
+  const monthLabel = new Intl.DateTimeFormat('pt-BR', {
+    month: 'long',
+    year: 'numeric',
+  }).format(now)
+  if (customersLoading || ordersLoading)
+    return <p role="status">Carregando dashboard...</p>
+  if (customersError || ordersError)
+    return (
+      <p role="alert">
+        Não foi possível carregar o dashboard. Tente novamente.
+      </p>
+    )
 
   return (
     <div className="space-y-9">
       <section className="flex flex-col gap-5 border-b border-border pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Quarta-feira, 23 de setembro
+            {dateLabel}
           </p>
           <h1 className="font-display text-[2.45rem] leading-[1.08] tracking-tight sm:text-5xl">
-            Bom dia. Sua operação
+            {greeting}. Sua operação
             <br className="hidden sm:block" /> em perspectiva.
           </h1>
           <p className="mt-3 text-sm text-muted-foreground sm:text-base">
@@ -85,12 +109,13 @@ export function DashboardPage() {
           >
             Visão geral
           </h2>
-          <span className="text-xs text-muted-foreground">
-            Setembro de 2026 · dados de demonstração
-          </span>
+          <span className="text-xs text-muted-foreground">{monthLabel}</span>
         </div>
         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-4">
-          <div className="bg-surface p-5 sm:p-6">
+          <div
+            data-testid="metric-in-progress"
+            className="bg-surface p-5 sm:p-6"
+          >
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs sm:text-sm">Em andamento</span>
               <ClipboardList className="size-4" aria-hidden="true" />
@@ -102,7 +127,7 @@ export function DashboardPage() {
               Serviços em execução
             </p>
           </div>
-          <div className="bg-surface p-5 sm:p-6">
+          <div data-testid="metric-waiting" className="bg-surface p-5 sm:p-6">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs sm:text-sm">Aguardando</span>
               <Clock3 className="size-4" aria-hidden="true" />
@@ -112,28 +137,27 @@ export function DashboardPage() {
               Precisam de acompanhamento
             </p>
           </div>
-          <div className="bg-surface p-5 sm:p-6">
+          <div data-testid="metric-completed" className="bg-surface p-5 sm:p-6">
             <div className="flex items-center justify-between text-muted-foreground">
               <span className="text-xs sm:text-sm">Concluídas no mês</span>
               <CheckCheck className="size-4" aria-hidden="true" />
             </div>
             <p className="mt-5 font-display text-4xl leading-none">
-              {completed.length}
+              {completedThisMonth}
             </p>
             <p className="mt-3 flex items-center gap-1 text-xs text-[#41613e]">
-              <ArrowUpRight className="size-3" aria-hidden="true" /> Entregas
-              finalizadas
+              Entregas finalizadas
             </p>
           </div>
-          <div className="bg-primary p-5 text-white sm:p-6">
+          <div
+            data-testid="metric-revenue"
+            className="bg-primary p-5 text-white sm:p-6"
+          >
             <div className="flex items-center justify-between text-white/75">
               <span className="text-xs sm:text-sm">Faturamento do mês</span>
-              <ArrowDownRight className="size-4" aria-hidden="true" />
             </div>
             <p className="mt-5 font-display text-[1.75rem] leading-none sm:text-[2rem]">
-              {formatCurrency(
-                completed.reduce((sum, order) => sum + order.value, 0),
-              )}
+              {formatCurrency(revenueThisMonth)}
             </p>
             <p className="mt-3 text-xs text-white/70">
               Valor das ordens concluídas
@@ -165,7 +189,7 @@ export function DashboardPage() {
               <span>Data</span>
             </div>
             <ul className="divide-y divide-border">
-              {demoOrders.slice(0, 5).map((order) => (
+              {recent.map((order) => (
                 <li
                   key={order.id}
                   className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 md:grid md:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_110px_90px] md:gap-3"
@@ -175,7 +199,7 @@ export function DashboardPage() {
                       {customerName(order.customerId)}
                     </p>
                     <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                      {order.title} · {order.id}
+                      {order.title} · {order.code}
                     </p>
                   </div>
                   <StatusBadge status={order.status} />
@@ -190,6 +214,11 @@ export function DashboardPage() {
                   </time>
                 </li>
               ))}
+              {recent.length === 0 && (
+                <li className="px-5 py-6 text-sm text-muted-foreground">
+                  Nenhuma ordem registrada.
+                </li>
+              )}
             </ul>
           </div>
         </section>
@@ -221,13 +250,12 @@ export function DashboardPage() {
                   </p>
                 </li>
               ))}
+              {attention.length === 0 && (
+                <li className="text-sm text-muted-foreground">
+                  Nenhuma ordem aguardando acompanhamento.
+                </li>
+              )}
             </ul>
-            <div className="mt-6 border-t border-border pt-4">
-              <Badge variant="warm">Dados demonstrativos</Badge>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                Acompanhamento baseado no status das ordens exibidas.
-              </p>
-            </div>
           </div>
         </section>
       </div>
