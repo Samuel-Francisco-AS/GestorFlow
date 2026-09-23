@@ -1,5 +1,50 @@
 import { expect, test } from '@playwright/test'
 
+test('ordem recente abre a ficha pelo clique na linha e pelo teclado', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+
+  const recent = page.getByRole('region', { name: 'Ordens recentes' })
+  const order = recent.getByRole('link', { name: /Identidade visual.*OS-1048/ })
+  await expect(order).toBeVisible()
+  await expect(order).toHaveAttribute('href', '/ordens/demo-order-1048')
+  await order.click({ position: { x: 300, y: 20 } })
+  await expect(page).toHaveURL(/\/ordens\/demo-order-1048$/)
+  await expect(
+    page.getByRole('heading', { name: 'Identidade visual' }),
+  ).toBeVisible()
+  await expect(page.getByText('Ordem OS-1048')).toBeVisible()
+
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Visão geral' })
+    .click()
+  await page.getByRole('link', { name: 'Nova ordem' }).focus()
+  await page.keyboard.press('Tab')
+  await expect(order).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/ordens\/demo-order-1048$/)
+  await expect(
+    page.getByRole('heading', { name: 'Identidade visual' }),
+  ).toBeVisible()
+})
+
+for (const width of [360, 390]) {
+  test(`dashboard sem overflow horizontal em ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 780 })
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+    await expect(
+      page.getByRole('region', { name: 'Ordens recentes' }).getByRole('link'),
+    ).not.toHaveCount(0)
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(width)
+  })
+}
+
 test('dashboard acompanha criação, andamento e conclusão de ordem na demo', async ({
   page,
 }) => {

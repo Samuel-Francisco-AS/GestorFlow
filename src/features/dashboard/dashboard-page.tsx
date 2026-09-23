@@ -190,28 +190,30 @@ export function DashboardPage() {
             </div>
             <ul className="divide-y divide-border">
               {recent.map((order) => (
-                <li
-                  key={order.id}
-                  className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 md:grid md:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_110px_90px] md:gap-3"
-                >
-                  <div className="min-w-0 flex-1 basis-full md:basis-auto">
-                    <p className="truncate text-sm font-semibold">
-                      {customerName(order.customerId)}
-                    </p>
-                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                      {order.title} · {order.code}
-                    </p>
-                  </div>
-                  <StatusBadge status={order.status} />
-                  <span className="ml-auto text-sm font-semibold md:ml-0">
-                    {formatCurrency(order.value)}
-                  </span>
-                  <time
-                    dateTime={order.date}
-                    className="w-full text-xs text-muted-foreground md:w-auto"
+                <li key={order.id}>
+                  <Link
+                    to={`/ordens/${order.id}`}
+                    className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4 hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary md:grid md:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_110px_90px] md:gap-3"
                   >
-                    {formatDate(order.date)}
-                  </time>
+                    <div className="min-w-0 flex-1 basis-full md:basis-auto">
+                      <p className="truncate text-sm font-semibold">
+                        {customerName(order.customerId)}
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {order.title} · {order.code}
+                      </p>
+                    </div>
+                    <StatusBadge status={order.status} />
+                    <span className="ml-auto text-sm font-semibold md:ml-0">
+                      {formatCurrency(order.value)}
+                    </span>
+                    <time
+                      dateTime={order.date}
+                      className="w-full text-xs text-muted-foreground md:w-auto"
+                    >
+                      {formatDate(order.date)}
+                    </time>
+                  </Link>
                 </li>
               ))}
               {recent.length === 0 && (
