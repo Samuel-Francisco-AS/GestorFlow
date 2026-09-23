@@ -1,25 +1,26 @@
-
 # GestorFlow
 
 GestorFlow é um sistema web de gestão pensado para MEIs, profissionais autônomos, microempresas e pequenos negócios que precisam organizar sua operação sem depender de sistemas caros, complexos ou difíceis de usar.
 
-A proposta do projeto é combinar simplicidade, boa experiência de uso e uma interface visualmente agradável com uma arquitetura enxuta, modular e preparada para evoluir.
+A proposta é combinar simplicidade, boa experiência de uso e uma interface visualmente agradável com uma arquitetura enxuta, modular e preparada para evoluir.
+
+> **Princípio do produto:** organize seu negócio sem precisar aprender a usar um ERP.
 
 ## Objetivo do MVP
 
-O MVP terá foco em demonstrar uma experiência de produto completa e funcional, com:
+O MVP deve demonstrar uma experiência de produto completa, funcional e apresentável como portfólio, com:
 
 - dashboard de visão geral;
 - cadastro e gerenciamento de clientes;
 - ordens de serviço;
-- busca e filtros;
+- busca e filtros essenciais;
 - atualização de status;
 - autenticação;
 - persistência de dados;
-- responsividade para desktop e mobile;
+- responsividade real para desktop e mobile;
 - dados de demonstração prontos para uso.
 
-A interface será orientada pelos seguintes princípios:
+A interface será orientada por:
 
 - estética;
 - simplicidade;
@@ -43,7 +44,7 @@ O GestorFlow é pensado principalmente para:
 
 O produto busca uma estética de **SaaS operacional elegante**, evitando o visual genérico de dashboards excessivamente tecnológicos.
 
-A identidade visual deverá utilizar:
+Diretrizes principais:
 
 - fundo em off-white quente, inspirado em papel timbrado;
 - superfícies claras;
@@ -53,7 +54,7 @@ A identidade visual deverá utilizar:
 - bordas sutis;
 - poucas sombras;
 - animações curtas e funcionais;
-- interface limpa, porém sem aparência vazia.
+- interface limpa, mas nunca vazia.
 
 ## Stack planejada
 
@@ -86,7 +87,7 @@ A identidade visual deverá utilizar:
 
 O MVP deverá operar com **custo obrigatório de infraestrutura de R$ 0/mês**.
 
-A estratégia inicial prevê serviços com camada gratuita, como:
+Estratégia inicial:
 
 - Cloudflare Pages para o frontend;
 - Supabase Free para backend e banco de dados;
@@ -96,42 +97,40 @@ Serviços pagos ou upgrades só deverão ser considerados caso o projeto deixe d
 
 ## Arquitetura
 
-O GestorFlow seguirá uma arquitetura de **monólito modular orientado por features**.
+O GestorFlow seguirá um **monólito modular orientado por features**.
 
-O objetivo é manter o MVP simples e rápido de desenvolver, sem impedir a evolução futura do sistema.
+A interface não deverá depender diretamente do provedor de backend. O acesso a dados ficará atrás de uma camada própria, permitindo evoluir ou substituir a infraestrutura sem reconstruir a aplicação.
 
-A aplicação deverá evitar acoplamento direto entre a interface e o provedor de backend, utilizando uma camada de acesso a dados que permita substituir ou evoluir a infraestrutura futuramente sem necessidade de reconstrução da interface.
+## Documentação
+
+- [PRODUCT.md](./PRODUCT.md) — contrato de produto, escopo e experiência do MVP.
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — stack, estrutura, fronteiras e decisões técnicas.
+- [STATUS.md](./STATUS.md) — estado atual, fases, gates e próximos passos.
 
 ## Escopo inicial
 
-O MVP será limitado às funcionalidades essenciais para demonstrar o produto.
+O MVP será deliberadamente limitado às funcionalidades essenciais para demonstrar o produto.
 
-Funcionalidades como:
+Ficam fora do MVP, entre outros:
 
 - agenda;
 - estoque;
 - módulo financeiro completo;
-- orçamentos;
+- orçamentos como módulo separado;
 - notificações;
 - integrações externas;
 - anexos;
 - multiusuário avançado;
-- relatórios;
-- inteligência artificial;
+- relatórios configuráveis;
+- inteligência artificial.
 
-ficarão fora do escopo inicial e poderão ser adicionadas futuramente.
+Essas funcionalidades poderão entrar em versões futuras sem fazer parte do compromisso inicial de prazo.
 
 ## Status
 
-**Fase atual:** pré-desenvolvimento / definição inicial.
+**Fase atual:** GF-0 — Fundação, ainda não iniciada.
 
-Próximos passos:
-
-1. consolidar documentação de produto;
-2. definir arquitetura detalhada;
-3. estabelecer design system;
-4. iniciar a fundação técnica;
-5. construir o shell visual do MVP.
+A pré-concepção do produto e o baseline documental do MVP estão definidos. O próximo passo é iniciar a fundação técnica sem ampliar o escopo.
 
 ## Licença
 
