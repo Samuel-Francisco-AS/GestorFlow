@@ -128,9 +128,11 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-5 — Dashboard derivado dos dados correntes; revisão visual humana pendente.
+**Fase atual:** GF-6 — polimento funcional e visual com gate técnico concluído; revisão visual humana pendente. **Próxima fase:** GF-7.
 
 Há dois caminhos de acesso: **Explorar demonstração**, com dados locais descartáveis e CRUD funcional, e **Entrar/Criar conta**, com Supabase Auth e dados privados persistidos no PostgreSQL. A demo dispensa configuração e permanece funcional sem Supabase. Recarregar a página reinicia o dataset demo.
+
+Na GF-6, o status da OS salva automaticamente com feedback de progresso, sucesso ou erro; a ação separada de conclusão pede confirmação. A interface apresenta o código `OS-…` e mantém o UUID nas rotas. A criação de OS orienta o cadastro do primeiro cliente e permite adicionar um cliente pelo formulário existente, retornando com a seleção pronta. Listas vazias, falhas de carregamento e layouts de 360, 390 e 768 px têm cobertura automatizada. A revisão visual humana, o teste de isolamento entre duas contas e a validação física no Moto G06 seguem pendentes; esta última aguarda acesso pela internet. Não houve publicação pública.
 
 ## Execução local
 

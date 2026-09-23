@@ -78,7 +78,7 @@ export function AppLayout() {
         </div>
       </aside>
       <div className="min-w-0">
-        <header className="flex h-16 items-center justify-between border-b border-border bg-surface px-5 sm:px-8 lg:h-20 lg:px-10">
+        <header className="flex h-16 items-center justify-between gap-2 border-b border-border bg-surface px-4 sm:px-8 lg:h-20 lg:px-10">
           <NavLink
             to="/"
             className="flex items-center gap-2.5 font-bold tracking-tight lg:hidden"
@@ -92,8 +92,13 @@ export function AppLayout() {
           <span className="hidden text-sm text-muted-foreground lg:block">
             Seu espaço de trabalho
           </span>
-          <span className="rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-primary">
-            {mode === 'demo' ? 'Ambiente de demonstração' : 'Conta pessoal'}
+          <span className="rounded-full border border-border bg-white px-2 py-1.5 text-xs font-medium text-primary sm:px-3">
+            <span className="sm:hidden">
+              {mode === 'demo' ? 'Demo' : 'Conta'}
+            </span>
+            <span className="hidden sm:inline">
+              {mode === 'demo' ? 'Ambiente de demonstração' : 'Conta pessoal'}
+            </span>
           </span>
           <Button
             variant="outline"

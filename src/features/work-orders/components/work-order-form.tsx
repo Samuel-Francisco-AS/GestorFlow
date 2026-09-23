@@ -21,6 +21,7 @@ type Props = {
   onSubmit: (values: WorkOrderInput) => Promise<void>
   cancelTo: string
   submitLabel: string
+  newCustomerTo?: string
 }
 
 const errorClass = 'mt-1.5 text-sm text-[#a13d31]'
@@ -33,12 +34,13 @@ export function WorkOrderForm({
   onSubmit,
   cancelTo,
   submitLabel,
+  newCustomerTo,
 }: Props) {
   const [submitError, setSubmitError] = useState('')
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<WorkOrderInput>({
     resolver: zodResolver(workOrderSchema),
     defaultValues: initialValues,
@@ -61,16 +63,32 @@ export function WorkOrderForm({
       className="mt-7 max-w-3xl space-y-5 rounded-lg border border-border bg-surface p-5 sm:p-8"
     >
       <div>
-        <label
-          htmlFor="order-customer"
-          className="mb-2 block text-sm font-semibold"
-        >
-          Cliente{' '}
-          <span aria-hidden="true" className="text-accent-foreground">
-            *
-          </span>
-          <span className="sr-only"> obrigatório</span>
-        </label>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <label htmlFor="order-customer" className="text-sm font-semibold">
+            Cliente{' '}
+            <span aria-hidden="true" className="text-accent-foreground">
+              *
+            </span>
+            <span className="sr-only"> obrigatório</span>
+          </label>
+          {newCustomerTo && (
+            <Link
+              to={newCustomerTo}
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline"
+              onClick={(event) => {
+                if (
+                  isDirty &&
+                  !window.confirm(
+                    'Os dados preenchidos nesta ordem serão descartados. Continuar?',
+                  )
+                )
+                  event.preventDefault()
+              }}
+            >
+              + Novo cliente
+            </Link>
+          )}
+        </div>
         <select
           id="order-customer"
           {...register('customerId')}

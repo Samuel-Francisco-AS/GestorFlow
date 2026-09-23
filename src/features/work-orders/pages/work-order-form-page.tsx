@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import { useCustomers } from '@/features/customers/customer-context'
+import { Button } from '@/shared/ui/button'
 import { WorkOrderForm } from '@/features/work-orders/components/work-order-form'
 import type { WorkOrderInput } from '@/features/work-orders/schema'
 import { useWorkOrders } from '@/features/work-orders/work-order-context'
@@ -11,12 +12,23 @@ export function WorkOrderFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { customers } = useCustomers()
-  const { orders, loading, createOrder, updateOrder } = useWorkOrders()
+  const {
+    customers,
+    loading: customersLoading,
+    error: customersError,
+  } = useCustomers()
+  const { orders, loading, error, createOrder, updateOrder } = useWorkOrders()
   const order = orders.find((item) => item.id === id)
   const editing = mode === 'edit'
 
-  if (loading) return <p role="status">Carregando ordens...</p>
+  if (loading || customersLoading)
+    return <p role="status">Carregando dados da ordem...</p>
+  if (error || customersError)
+    return (
+      <p role="alert">
+        Não foi possível carregar os dados da ordem. Tente novamente.
+      </p>
+    )
 
   if (editing && !order)
     return (
@@ -95,13 +107,29 @@ export function WorkOrderFormPage({ mode }: { mode: 'create' | 'edit' }) {
             : 'Registre as informações essenciais do serviço.'}
         </p>
       </header>
-      <WorkOrderForm
-        customers={customers}
-        initialValues={initialValues}
-        onSubmit={save}
-        cancelTo={backTo}
-        submitLabel={editing ? 'Salvar alterações' : 'Criar ordem'}
-      />
+      {!editing && customers.length === 0 ? (
+        <section className="mt-7 max-w-3xl rounded-lg border border-border bg-surface p-6 sm:p-8">
+          <h2 className="font-display text-2xl">
+            Cadastre um cliente primeiro
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            É necessário cadastrar um cliente antes de criar a ordem.
+          </p>
+          <Button asChild className="mt-5">
+            <Link to="/clientes/novo?origem=ordem">Cadastrar cliente</Link>
+          </Button>
+        </section>
+      ) : (
+        <WorkOrderForm
+          key={`${editing ? order?.id : 'create'}-${initialValues.customerId}`}
+          customers={customers}
+          initialValues={initialValues}
+          onSubmit={save}
+          cancelTo={backTo}
+          submitLabel={editing ? 'Salvar alterações' : 'Criar ordem'}
+          newCustomerTo={!editing ? '/clientes/novo?origem=ordem' : undefined}
+        />
+      )}
     </div>
   )
 }

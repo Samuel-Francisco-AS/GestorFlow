@@ -7,6 +7,21 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { shouldClearSessionCache } from '@/features/auth/session-transition'
 
+function authMessage(error: unknown) {
+  if (!(error instanceof Error))
+    return 'Não foi possível concluir o acesso. Tente novamente.'
+  switch (error.message) {
+    case 'Invalid login credentials':
+      return 'E-mail ou senha incorretos.'
+    case 'Email not confirmed':
+      return 'Confirme seu e-mail antes de entrar.'
+    case 'User already registered':
+      return 'Este e-mail já possui uma conta.'
+    default:
+      return 'Não foi possível concluir o acesso. Tente novamente.'
+  }
+}
+
 export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient()
   const [session, setSession] = useState<Session | null>(null)
@@ -92,11 +107,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (error) throw error
       }
     } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : 'Não foi possível concluir o acesso.',
-      )
+      if (import.meta.env.DEV) console.error('Falha de autenticação:', error)
+      setMessage(authMessage(error))
     } finally {
       setPending(false)
     }

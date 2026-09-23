@@ -1,5 +1,6 @@
 import { ArrowLeft, Check, Pencil } from 'lucide-react'
 import { Link, useLocation, useParams } from 'react-router'
+import { useState } from 'react'
 
 import { formatCurrency, formatDate } from '@/data/demo'
 import { useCustomers } from '@/features/customers/customer-context'
@@ -15,12 +16,26 @@ import { Button } from '@/shared/ui/button'
 export function WorkOrderDetailPage() {
   const { id } = useParams()
   const location = useLocation()
-  const { orders, loading, statusPending, updateStatus } = useWorkOrders()
-  const { customers } = useCustomers()
+  const { orders, loading, error, statusPending, updateStatus } =
+    useWorkOrders()
+  const [feedback, setFeedback] = useState<
+    'saving' | 'success' | 'error' | null
+  >(null)
+  const [confirming, setConfirming] = useState(false)
+  const {
+    customers,
+    loading: customersLoading,
+    error: customersError,
+  } = useCustomers()
   const order = orders.find((item) => item.id === id)
   const customer = customers.find((item) => item.id === order?.customerId)
 
-  if (loading) return <p role="status">Carregando ordens...</p>
+  if (loading || customersLoading)
+    return <p role="status">Carregando dados da ordem...</p>
+  if (error || customersError)
+    return (
+      <p role="alert">Não foi possível carregar a ordem. Tente novamente.</p>
+    )
 
   if (!order)
     return (
@@ -34,6 +49,18 @@ export function WorkOrderDetailPage() {
         </Button>
       </section>
     )
+
+  async function changeStatus(value: WorkOrderStatus) {
+    if (!order || statusPending) return
+    setFeedback('saving')
+    setConfirming(false)
+    try {
+      await updateStatus(order.id, value)
+      setFeedback('success')
+    } catch {
+      setFeedback('error')
+    }
+  }
 
   return (
     <div>
@@ -53,23 +80,30 @@ export function WorkOrderDetailPage() {
         </div>
       )}
       <header className="mt-5 flex flex-col gap-5 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
             Ordem {order.code}
           </p>
-          <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
+          <h1 className="break-words font-display text-4xl tracking-tight sm:text-5xl">
             {order.title}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             Registrada em {formatDate(order.date)}
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link to={`/ordens/${order.id}/editar`}>
+        {statusPending ? (
+          <Button variant="outline" disabled>
             <Pencil aria-hidden="true" />
             Editar ordem
-          </Link>
-        </Button>
+          </Button>
+        ) : (
+          <Button asChild variant="outline">
+            <Link to={`/ordens/${order.id}/editar`}>
+              <Pencil aria-hidden="true" />
+              Editar ordem
+            </Link>
+          </Button>
+        )}
       </header>
       <div className="grid gap-8 pt-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.8fr)]">
         <section
@@ -139,7 +173,7 @@ export function WorkOrderDetailPage() {
             </div>
           </dl>
         </section>
-        <aside className="space-y-6">
+        <aside className="min-w-0 space-y-6">
           <section
             className="rounded-lg border border-border bg-surface p-5"
             aria-labelledby="change-status"
@@ -148,7 +182,7 @@ export function WorkOrderDetailPage() {
               Andamento
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Atualize o status sem editar os demais dados.
+              Selecione um status. A alteração é salva automaticamente.
             </p>
             <label
               htmlFor="detail-status"
@@ -160,11 +194,9 @@ export function WorkOrderDetailPage() {
               id="detail-status"
               value={order.status}
               disabled={statusPending}
+              aria-describedby="status-help"
               onChange={(event) => {
-                void updateStatus(
-                  order.id,
-                  event.target.value as WorkOrderStatus,
-                )
+                void changeStatus(event.target.value as WorkOrderStatus)
               }}
               className="mt-2 h-11 w-full rounded-md border border-border bg-surface-strong px-3 text-sm"
             >
@@ -174,23 +206,75 @@ export function WorkOrderDetailPage() {
                 </option>
               ))}
             </select>
-            {order.status !== 'completed' && (
-              <Button
-                type="button"
-                className="mt-4 w-full"
-                disabled={statusPending}
-                onClick={() => {
-                  void updateStatus(order.id, 'completed')
-                }}
-              >
-                <Check aria-hidden="true" />
-                Concluir ordem
-              </Button>
-            )}
-            <p role="status" className="mt-3 text-sm text-primary">
-              Status atual: {workOrderStatusLabel[order.status]}.
+            <p id="status-help" className="sr-only">
+              A alteração é salva automaticamente.
+            </p>
+            <p
+              role={feedback === 'error' ? 'alert' : 'status'}
+              aria-live="polite"
+              className={`mt-3 text-sm ${feedback === 'error' ? 'text-[#a13d31]' : 'text-primary'}`}
+            >
+              {feedback === 'saving'
+                ? 'Salvando alteração...'
+                : feedback === 'success'
+                  ? 'Status atualizado.'
+                  : feedback === 'error'
+                    ? 'Não foi possível atualizar o status. Tente novamente.'
+                    : `Status atual: ${workOrderStatusLabel[order.status]}.`}
             </p>
           </section>
+          {order.status !== 'completed' && (
+            <section
+              className="rounded-lg border border-border bg-surface p-5"
+              aria-labelledby="finish-service"
+            >
+              <h2 id="finish-service" className="font-display text-xl">
+                Finalização do serviço
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Use esta ação somente quando o trabalho estiver concluído.
+              </p>
+              {confirming ? (
+                <div className="mt-4 space-y-3">
+                  <p className="text-sm font-medium">
+                    Confirmar a conclusão desta ordem?
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={statusPending}
+                      onClick={() => {
+                        void changeStatus('completed')
+                      }}
+                    >
+                      <Check aria-hidden="true" />
+                      Confirmar conclusão
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={statusPending}
+                      onClick={() => setConfirming(false)}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-4"
+                  disabled={statusPending}
+                  onClick={() => setConfirming(true)}
+                >
+                  <Check aria-hidden="true" />
+                  Concluir ordem
+                </Button>
+              )}
+            </section>
+          )}
           <section
             className="hidden rounded-lg border border-border bg-surface p-5 lg:block"
             aria-labelledby="other-orders"

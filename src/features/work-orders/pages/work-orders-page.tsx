@@ -17,7 +17,11 @@ import { Input } from '@/shared/ui/input'
 
 export function WorkOrdersPage() {
   const { orders, loading, error } = useWorkOrders()
-  const { customers } = useCustomers()
+  const {
+    customers,
+    loading: customersLoading,
+    error: customersError,
+  } = useCustomers()
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<WorkOrderStatus | 'all'>('all')
   const filtered = filterWorkOrders(orders, customers, query, status)
@@ -25,8 +29,9 @@ export function WorkOrdersPage() {
     customers.find((customer) => customer.id === id)?.name ??
     'Cliente não encontrado'
 
-  if (loading) return <p role="status">Carregando ordens...</p>
-  if (error)
+  if (loading || customersLoading)
+    return <p role="status">Carregando ordens...</p>
+  if (error || customersError)
     return (
       <p role="alert">Não foi possível carregar ordens. Tente novamente.</p>
     )
@@ -66,7 +71,7 @@ export function WorkOrdersPage() {
               id="order-search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="ID, cliente ou serviço"
+              placeholder="Código, cliente ou serviço"
               className="pl-10"
             />
           </div>
@@ -97,7 +102,23 @@ export function WorkOrdersPage() {
         <p className="mb-4 text-sm text-muted-foreground">
           {filtered.length} {filtered.length === 1 ? 'ordem' : 'ordens'}
         </p>
-        {filtered.length === 0 ? (
+        {orders.length === 0 ? (
+          <div className="rounded-lg border border-border bg-surface p-8 text-center sm:p-10">
+            <ClipboardList
+              className="mx-auto mb-4 size-8 text-primary"
+              aria-hidden="true"
+            />
+            <h2 className="font-display text-2xl">
+              Sua primeira ordem começa aqui
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Registre um serviço para acompanhar seu andamento.
+            </p>
+            <Button asChild className="mt-5">
+              <Link to="/ordens/nova">Nova ordem</Link>
+            </Button>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="rounded-lg border border-border bg-surface p-10 text-center">
             <ClipboardList
               className="mx-auto mb-4 size-8 text-primary"
@@ -111,7 +132,7 @@ export function WorkOrdersPage() {
         ) : (
           <div className="overflow-hidden rounded-lg border border-border bg-surface">
             <div className="hidden grid-cols-[90px_minmax(0,1.2fr)_minmax(0,1.5fr)_110px_90px_90px_20px] gap-3 border-b border-border px-5 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground lg:grid">
-              <span>ID</span>
+              <span>Ordem</span>
               <span>Cliente</span>
               <span>Serviço</span>
               <span>Status</span>
@@ -127,7 +148,7 @@ export function WorkOrdersPage() {
                     className="group flex min-h-24 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-5 py-4 hover:bg-white focus-visible:bg-white lg:grid lg:min-h-18 lg:grid-cols-[90px_minmax(0,1.2fr)_minmax(0,1.5fr)_110px_90px_90px_20px]"
                   >
                     <span className="text-xs font-semibold text-primary lg:text-sm">
-                      {order.id}
+                      {order.code}
                     </span>
                     <span className="w-full min-w-0 truncate text-sm font-semibold order-first lg:order-none lg:w-auto">
                       {customerName(order.customerId)}

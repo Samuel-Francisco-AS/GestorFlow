@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-5 — Gate técnico concluído; revisão visual humana pendente
+**Fase:** GF-6 — Gate técnico concluído; revisão visual humana pendente
 
-**Próxima fase:** GF-6 — Polish
+**Próxima fase:** GF-7 — Demo & deploy
 
 **MVP:** em execução
 **Deploy:** inexistente  
@@ -99,7 +99,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | GF-3 | Ordens | 1,5–2 dias | Gate técnico concluído; revisão visual pendente |
 | GF-4 | Persistência | 1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-5 | Dashboard real | 0,5–1 dia | Gate técnico concluído; revisão visual pendente |
-| GF-6 | Polish | 1–2 dias | Pendente |
+| GF-6 | Polish | 1–2 dias | Gate técnico concluído; revisão visual humana pendente |
 | GF-7 | Demo & deploy | 0,5–1 dia | Pendente |
 
 Janela desejada: **7–10 dias**.  
@@ -121,9 +121,15 @@ Supabase Auth por e-mail e senha, entrada demo sem cadastro e recuperação de s
 
 O dashboard usa as ordens e clientes correntes fornecidos pelos mesmos contratos de dados da demo e da conta persistente. Em andamento, aguardando, concluídas e faturamento do mês são calculados das ordens atuais; recentes têm ordenação estável, e atenção inclui ordens aguardando. Mutations invalidam as queries, atualizando o dashboard sem reload. A data e a saudação usam o relógio local. Os números deixam de depender de `demoOrders` estático.
 
+## GF-6
+
+O seletor de status salva automaticamente e comunica andamento, sucesso confirmado e erro sem alterar visualmente o status real em caso de falha. A finalização fica em seção separada, com confirmação cancelável. A listagem mostra o código amigável da OS, mantendo UUID em rotas e chaves internas. Nova OS sem clientes orienta o cadastro; o formulário existente retorna à criação com o cliente pré-selecionado. O cadastro normal continua levando à ficha do cliente. Foram ajustados estados vazios de ordens, erros de consulta em detalhes e formulários, mensagens conhecidas de Auth e quebras de texto. Há testes E2E com módulos demo interceptados para falha de mutation, UUID, base vazia e cliente recém-criado; não usam dados remotos. Os fluxos foram verificados em 360, 390 e 768 px por Playwright, além do golden path demo existente.
+
+Permanecem pendentes a revisão visual humana, o teste de isolamento entre duas contas distintas e a validação física no Moto G06, adiada até haver acesso pela internet. Integração remota e publicação pública não foram executadas nesta fase.
+
 ## Próximo passo
 
-GF-6 — Polish, após revisão visual humana das fases anteriores.
+GF-7 — Demo & deploy, após a revisão humana pendente.
 
 A primeira implementação deve preservar a prioridade do projeto:
 

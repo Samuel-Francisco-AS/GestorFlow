@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import { CustomerForm } from '@/features/customers/components/customer-form'
 import { useCustomers } from '@/features/customers/customer-context'
@@ -8,11 +8,18 @@ import type { CustomerInput } from '@/features/customers/schema'
 export function CustomerFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { customers, loading, createCustomer, updateCustomer } = useCustomers()
+  const [searchParams] = useSearchParams()
+  const { customers, loading, error, createCustomer, updateCustomer } =
+    useCustomers()
   const customer = customers.find((item) => item.id === id)
   const editing = mode === 'edit'
+  const fromOrder = !editing && searchParams.get('origem') === 'ordem'
 
   if (loading) return <p role="status">Carregando clientes...</p>
+  if (error)
+    return (
+      <p role="alert">Não foi possível carregar o cliente. Tente novamente.</p>
+    )
 
   if (editing && !customer)
     return (
@@ -35,13 +42,23 @@ export function CustomerFormPage({ mode }: { mode: 'create' | 'edit' }) {
       })
     } else {
       const created = await createCustomer(values)
-      navigate(`/clientes/${created.id}`, {
-        state: { flash: 'Cliente cadastrado com sucesso.' },
-      })
+      navigate(
+        fromOrder
+          ? `/ordens/nova?cliente=${encodeURIComponent(created.id)}`
+          : `/clientes/${created.id}`,
+        {
+          state: { flash: 'Cliente cadastrado com sucesso.' },
+        },
+      )
     }
   }
 
-  const backTo = editing && customer ? `/clientes/${customer.id}` : '/clientes'
+  const backTo =
+    editing && customer
+      ? `/clientes/${customer.id}`
+      : fromOrder
+        ? '/ordens/nova'
+        : '/clientes'
   return (
     <div>
       <Link

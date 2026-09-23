@@ -8,12 +8,23 @@ import { Button } from '@/shared/ui/button'
 
 export function CustomerDetailPage() {
   const { id } = useParams()
-  const { customers, loading } = useCustomers()
-  const { orders: allOrders } = useWorkOrders()
+  const { customers, loading, error } = useCustomers()
+  const {
+    orders: allOrders,
+    loading: ordersLoading,
+    error: ordersError,
+  } = useWorkOrders()
   const location = useLocation()
   const customer = customers.find((item) => item.id === id)
 
-  if (loading) return <p role="status">Carregando clientes...</p>
+  if (loading || ordersLoading)
+    return <p role="status">Carregando dados do cliente...</p>
+  if (error || ordersError)
+    return (
+      <p role="alert">
+        Não foi possível carregar os dados do cliente. Tente novamente.
+      </p>
+    )
 
   if (!customer)
     return (
@@ -51,7 +62,7 @@ export function CustomerDetailPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
             Ficha do cliente
           </p>
-          <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
+          <h1 className="break-words font-display text-4xl tracking-tight sm:text-5xl">
             {customer.name}
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">

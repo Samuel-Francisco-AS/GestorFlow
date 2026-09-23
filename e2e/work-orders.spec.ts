@@ -66,9 +66,11 @@ test('lista, pesquisa, filtro, detalhe, criação, edição e associação com c
     page.getByRole('heading', { name: 'Ensaio fotográfico comercial' }),
   ).toBeVisible()
   await page.getByLabel('Status da ordem').selectOption('in_progress')
-  await expect(page.getByRole('status').last()).toContainText('Em andamento')
+  await expect(page.getByRole('status').last()).toHaveText('Status atualizado.')
+  await expect(page.getByLabel('Status da ordem')).toHaveValue('in_progress')
   await page.getByRole('button', { name: 'Concluir ordem' }).click()
-  await expect(page.getByRole('status').last()).toContainText('Concluído')
+  await page.getByRole('button', { name: 'Confirmar conclusão' }).click()
+  await expect(page.getByLabel('Status da ordem')).toHaveValue('completed')
   await page.getByRole('link', { name: 'Marina Albuquerque' }).click()
   await expect(
     page.getByRole('link', { name: 'Ensaio fotográfico comercial' }),

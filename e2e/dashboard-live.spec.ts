@@ -31,7 +31,7 @@ test('dashboard acompanha criação, andamento e conclusão de ordem na demo', a
   ).toBeVisible()
   await expect(page.getByText('OS-1049').first()).toBeVisible()
   await page.getByLabel('Status da ordem').selectOption('in_progress')
-  await expect(page.getByRole('status').last()).toContainText('Em andamento')
+  await expect(page.getByRole('status').last()).toHaveText('Status atualizado.')
   await page
     .getByRole('navigation', { name: 'Navegação principal' })
     .getByRole('link', { name: 'Visão geral' })
@@ -48,7 +48,8 @@ test('dashboard acompanha criação, andamento e conclusão de ordem na demo', a
     .click()
   await page.getByRole('link', { name: /Serviço dashboard/ }).click()
   await page.getByRole('button', { name: 'Concluir ordem' }).click()
-  await expect(page.getByRole('status').last()).toContainText('Concluído')
+  await page.getByRole('button', { name: 'Confirmar conclusão' }).click()
+  await expect(page.getByLabel('Status da ordem')).toHaveValue('completed')
   await page
     .getByRole('navigation', { name: 'Navegação principal' })
     .getByRole('link', { name: 'Visão geral' })
