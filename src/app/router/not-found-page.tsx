@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button'
 
 export function NotFoundPage() {
   return (
-    <main className="mx-auto flex min-h-svh max-w-content flex-col items-start justify-center gap-5 px-page">
+    <section className="flex min-h-[60vh] flex-col items-start justify-center gap-5">
       <span className="text-sm font-semibold text-primary">
         404 · GestorFlow
       </span>
@@ -17,6 +17,6 @@ export function NotFoundPage() {
       <Button asChild>
         <Link to="/">Voltar ao início</Link>
       </Button>
-    </main>
+    </section>
   )
 }

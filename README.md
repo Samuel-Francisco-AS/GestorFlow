@@ -128,9 +128,9 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-0 — Fundação implementada, pendente de revisão.
+**Fase atual:** GF-1 — Shell responsivo e dashboard demonstrativo implementados; revisão visual pendente.
 
-A pré-concepção do produto e o baseline documental do MVP estão definidos. A aplicação inicial demonstra o design system e o roteamento; as funcionalidades de negócio começam em GF-1.
+A pré-concepção do produto e o baseline documental do MVP estão definidos. A página inicial apresenta indicadores e ordens fictícios de setembro de 2026. A gestão de clientes começa em GF-2.
 
 ## Execução local
 
@@ -141,7 +141,7 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço local informado pelo Vite. A página inicial é uma superfície técnica temporária, não o dashboard do MVP.
+Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. A ação de criar ordem e os destinos ainda não implementados são apresentados como indisponíveis.
 
 ```bash
 npm run build

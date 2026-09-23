@@ -2,11 +2,11 @@
 
 ## Estado atual
 
-**Fase:** GF-0 — Fundação implementada, pendente de revisão
+**Fase:** GF-1 — Gate técnico concluído; revisão visual pendente
 
-**Próxima fase:** GF-1 — Shell visual, após revisão de GF-0
+**Próxima fase:** GF-2 — Gestão mockada de clientes
 
-**MVP:** não iniciado  
+**MVP:** em execução
 **Deploy:** inexistente  
 **Infraestrutura obrigatória:** R$ 0/mês
 
@@ -94,7 +94,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | Fase | Objetivo | Estimativa | Estado |
 | --- | --- | ---: | --- |
 | GF-0 | Fundação técnica | 0,5–1 dia | Implementada; pendente de revisão |
-| GF-1 | Shell visual | 1 dia | Pendente |
+| GF-1 | Shell visual | 1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-2 | Clientes | 1–1,5 dia | Pendente |
 | GF-3 | Ordens | 1,5–2 dias | Pendente |
 | GF-4 | Persistência | 1 dia | Pendente |
@@ -107,21 +107,11 @@ Teto absoluto: **14 dias**.
 
 ## Gate atual
 
-GF-0 foi implementada para revisão técnica com:
-
-- app React + TypeScript + Vite executando;
-- estrutura modular inicial;
-- router;
-- providers;
-- lint/format;
-- Vitest baseline;
-- design tokens;
-- primitives essenciais suficientes para iniciar o shell;
-- nenhuma feature fora de escopo adicionada.
+GF-1 substituiu a página técnica por shell desktop/mobile e dashboard com dados demonstrativos centralizados em `src/data/demo.ts`. A navegação de Clientes e Ordens indica indisponibilidade até suas etapas. A ação Nova ordem permanece desabilitada. `@types/node` foi alinhado à linha 24.x para o runtime Node 24. A avaliação visual final cabe ao usuário.
 
 ## Próximo passo
 
-Revisar **GF-0 — Fundação**. Após aprovação, iniciar **GF-1 — Shell visual**.
+Implementar **GF-2 — Clientes** após registrar o gate e commit GF-1. A persistência real permanece planejada para GF-4.
 
 A primeira implementação deve preservar a prioridade do projeto:
 
