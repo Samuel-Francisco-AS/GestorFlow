@@ -2,8 +2,10 @@
 
 ## Estado atual
 
-**Fase:** pré-desenvolvimento concluído  
-**Próxima fase:** GF-0 — Fundação  
+**Fase:** GF-0 — Fundação implementada, pendente de revisão
+
+**Próxima fase:** GF-1 — Shell visual, após revisão de GF-0
+
 **MVP:** não iniciado  
 **Deploy:** inexistente  
 **Infraestrutura obrigatória:** R$ 0/mês
@@ -91,7 +93,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 
 | Fase | Objetivo | Estimativa | Estado |
 | --- | --- | ---: | --- |
-| GF-0 | Fundação técnica | 0,5–1 dia | Próxima |
+| GF-0 | Fundação técnica | 0,5–1 dia | Implementada; pendente de revisão |
 | GF-1 | Shell visual | 1 dia | Pendente |
 | GF-2 | Clientes | 1–1,5 dia | Pendente |
 | GF-3 | Ordens | 1,5–2 dias | Pendente |
@@ -105,7 +107,7 @@ Teto absoluto: **14 dias**.
 
 ## Gate atual
 
-Antes de considerar GF-0 concluída, devem existir:
+GF-0 foi implementada para revisão técnica com:
 
 - app React + TypeScript + Vite executando;
 - estrutura modular inicial;
@@ -119,7 +121,7 @@ Antes de considerar GF-0 concluída, devem existir:
 
 ## Próximo passo
 
-Iniciar **GF-0 — Fundação**.
+Revisar **GF-0 — Fundação**. Após aprovação, iniciar **GF-1 — Shell visual**.
 
 A primeira implementação deve preservar a prioridade do projeto:
 

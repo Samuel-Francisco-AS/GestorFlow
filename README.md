@@ -128,9 +128,31 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-0 — Fundação, ainda não iniciada.
+**Fase atual:** GF-0 — Fundação implementada, pendente de revisão.
 
-A pré-concepção do produto e o baseline documental do MVP estão definidos. O próximo passo é iniciar a fundação técnica sem ampliar o escopo.
+A pré-concepção do produto e o baseline documental do MVP estão definidos. A aplicação inicial demonstra o design system e o roteamento; as funcionalidades de negócio começam em GF-1.
+
+## Execução local
+
+Requer Node.js 22.12+ e npm. Com Node.js 24 instalado:
+
+```bash
+npm ci
+npm run dev
+```
+
+Abra o endereço local informado pelo Vite. A página inicial é uma superfície técnica temporária, não o dashboard do MVP.
+
+```bash
+npm run build
+npm run lint
+npm run typecheck
+npm run test
+npx playwright install chromium
+npm run test:e2e
+```
+
+O último teste usa Chromium local e pode exigir bibliotecas de sistema no Linux. Nenhuma variável de ambiente ou serviço externo é necessária nesta fase.
 
 ## Licença
 
