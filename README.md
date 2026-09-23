@@ -128,31 +128,32 @@ Essas funcionalidades poderão entrar em versões futuras sem fazer parte do com
 
 ## Status
 
-**Fase atual:** GF-3 — Ordens de serviço tecnicamente implementadas; revisão visual humana pendente.
+**Fase atual:** GF-4 — Persistência e Auth implementados; GF-5 (dashboard derivado dos dados correntes) pendente.
 
-A página inicial mantém indicadores e ordens demonstrativos de setembro de 2026. Em Clientes, é possível pesquisar, abrir fichas, cadastrar e editar registros. Em Ordens, é possível pesquisar, filtrar por status, abrir detalhes, criar, editar e alterar o status. A ficha do cliente mostra suas ordens atuais e permite iniciar uma nova ordem com o cliente preenchido. As alterações ficam apenas na memória da sessão e são perdidas ao recarregar a aplicação. A persistência real, com Supabase, pertence à GF-4; o dashboard derivado dos dados atuais pertence à GF-5.
+Há dois caminhos de acesso: **Explorar demonstração**, com dados locais descartáveis e CRUD funcional, e **Entrar/Criar conta**, com Supabase Auth e dados privados persistidos no PostgreSQL. A demo dispensa configuração e permanece funcional sem Supabase. Recarregar a página reinicia o dataset demo.
 
 ## Execução local
 
-Requer Node.js 22.12+ e npm. Com Node.js 24 instalado:
+Requer Node.js 22.12+ e npm:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Abra o endereço local informado pelo Vite. A página inicial é o dashboard demonstrativo. Clientes e Ordens de serviço estão disponíveis com dados em memória. O botão Nova ordem do dashboard abre a criação de OS; suas métricas e listas continuam demonstrativas nesta fase.
+Para usar uma conta persistente, copie `.env.example` para `.env.local` e preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` com os valores públicos do projeto existente. A aplicação compila e a demo funciona sem essas variáveis. Nunca use service role, secret key ou senha do banco no frontend.
 
 ```bash
-npm run build
+npm run format
 npm run lint
 npm run typecheck
 npm run test
+npm run build
 npx playwright install chromium
 npm run test:e2e
 ```
 
-O último teste usa Chromium local e pode exigir bibliotecas de sistema no Linux. Nenhuma variável de ambiente ou serviço externo é necessária nesta fase.
+O schema remoto existente está registrado em `supabase/migrations/20260923175233_gf4_initial_persistence_schema.sql` para versionamento e instalações futuras. Não aplique essa migration novamente ao projeto já configurado. RLS limita leitura, criação e atualização ao proprietário; o MVP não inclui exclusão. A UI usa repositories demo/Supabase sob contratos comuns e TanStack Query para consultas, mutations e invalidação. O dashboard ainda usa métricas demonstrativas até GF-5.
 
 ## Licença
 

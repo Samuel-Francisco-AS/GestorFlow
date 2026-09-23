@@ -16,7 +16,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 
 export function WorkOrdersPage() {
-  const { orders } = useWorkOrders()
+  const { orders, loading, error } = useWorkOrders()
   const { customers } = useCustomers()
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<WorkOrderStatus | 'all'>('all')
@@ -24,6 +24,12 @@ export function WorkOrdersPage() {
   const customerName = (id: string) =>
     customers.find((customer) => customer.id === id)?.name ??
     'Cliente não encontrado'
+
+  if (loading) return <p role="status">Carregando ordens...</p>
+  if (error)
+    return (
+      <p role="alert">Não foi possível carregar ordens. Tente novamente.</p>
+    )
 
   return (
     <div>

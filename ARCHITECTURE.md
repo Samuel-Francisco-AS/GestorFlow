@@ -377,7 +377,7 @@ A aplicação terá:
 
 O visitante do portfólio não deve precisar confirmar e-mail para conhecer o produto.
 
-A estratégia exata de isolamento/reset dos dados demo será definida em GF-4/GF-7, preservando:
+O modo demo usa repositories locais em memória, reiniciados no reload; contas usam Auth e repositories Supabase. Ambos seguem os mesmos contratos. A estratégia preserva:
 
 - custo zero;
 - segurança;

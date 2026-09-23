@@ -12,6 +12,7 @@ test('lista, pesquisa, filtro, detalhe, criação, edição e associação com c
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
   await page
     .getByRole('navigation', { name: 'Navegação principal' })
     .getByRole('link', { name: 'Ordens de serviço' })
@@ -97,7 +98,7 @@ test('lista, pesquisa, filtro, detalhe, criação, edição e associação com c
   await expect(
     page.getByRole('link', { name: 'Café Aurora Centro' }),
   ).toBeVisible()
-  await page.goto('/ordens/OS-inexistente')
+  await page.goto('/ordens/demo-order-inexistente')
   await expect(
     page.getByRole('heading', { name: 'Ordem não encontrada' }),
   ).toBeVisible()
@@ -114,6 +115,7 @@ for (const width of [360, 390]) {
     page.on('pageerror', (error) => errors.push(error.message))
     await page.setViewportSize({ width, height: 780 })
     await page.goto('/')
+    await page.getByRole('button', { name: 'Explorar demonstração' }).click()
     await page
       .getByRole('navigation', { name: 'Navegação mobile' })
       .getByRole('link', { name: 'Ordens' })

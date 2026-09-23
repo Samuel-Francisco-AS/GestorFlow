@@ -5,9 +5,12 @@ import type { WorkOrderInput } from '@/features/work-orders/schema'
 
 export type WorkOrderStore = {
   orders: WorkOrder[]
-  createOrder: (input: WorkOrderInput) => WorkOrder
-  updateOrder: (id: string, input: WorkOrderInput) => void
-  updateStatus: (id: string, status: WorkOrderStatus) => void
+  loading: boolean
+  error: Error | null
+  statusPending: boolean
+  createOrder: (input: WorkOrderInput) => Promise<WorkOrder>
+  updateOrder: (id: string, input: WorkOrderInput) => Promise<WorkOrder>
+  updateStatus: (id: string, status: WorkOrderStatus) => Promise<WorkOrder>
 }
 
 export const WorkOrderContext = createContext<WorkOrderStore | null>(null)

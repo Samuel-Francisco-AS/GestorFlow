@@ -5,8 +5,10 @@ import type { CustomerInput } from '@/features/customers/schema'
 
 export type CustomerStore = {
   customers: Customer[]
-  createCustomer: (input: CustomerInput) => Customer
-  updateCustomer: (id: string, input: CustomerInput) => void
+  loading: boolean
+  error: Error | null
+  createCustomer: (input: CustomerInput) => Promise<Customer>
+  updateCustomer: (id: string, input: CustomerInput) => Promise<Customer>
 }
 
 export const CustomerContext = createContext<CustomerStore | null>(null)

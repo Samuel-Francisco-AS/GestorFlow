@@ -15,10 +15,12 @@ import { Button } from '@/shared/ui/button'
 export function WorkOrderDetailPage() {
   const { id } = useParams()
   const location = useLocation()
-  const { orders, updateStatus } = useWorkOrders()
+  const { orders, loading, statusPending, updateStatus } = useWorkOrders()
   const { customers } = useCustomers()
   const order = orders.find((item) => item.id === id)
   const customer = customers.find((item) => item.id === order?.customerId)
+
+  if (loading) return <p role="status">Carregando ordens...</p>
 
   if (!order)
     return (
@@ -53,7 +55,7 @@ export function WorkOrderDetailPage() {
       <header className="mt-5 flex flex-col gap-5 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-            Ordem {order.id}
+            Ordem {order.code}
           </p>
           <h1 className="font-display text-4xl tracking-tight sm:text-5xl">
             {order.title}
@@ -157,9 +159,13 @@ export function WorkOrderDetailPage() {
             <select
               id="detail-status"
               value={order.status}
-              onChange={(event) =>
-                updateStatus(order.id, event.target.value as WorkOrderStatus)
-              }
+              disabled={statusPending}
+              onChange={(event) => {
+                void updateStatus(
+                  order.id,
+                  event.target.value as WorkOrderStatus,
+                )
+              }}
               className="mt-2 h-11 w-full rounded-md border border-border bg-surface-strong px-3 text-sm"
             >
               {workOrderStatuses.map((status) => (
@@ -172,7 +178,10 @@ export function WorkOrderDetailPage() {
               <Button
                 type="button"
                 className="mt-4 w-full"
-                onClick={() => updateStatus(order.id, 'completed')}
+                disabled={statusPending}
+                onClick={() => {
+                  void updateStatus(order.id, 'completed')
+                }}
               >
                 <Check aria-hidden="true" />
                 Concluir ordem
@@ -201,7 +210,7 @@ export function WorkOrderDetailPage() {
                     >
                       <span className="block font-semibold">{item.title}</span>
                       <span className="text-xs text-muted-foreground">
-                        {item.id} · {workOrderStatusLabel[item.status]}
+                        {item.code} · {workOrderStatusLabel[item.status]}
                       </span>
                     </Link>
                   </li>

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useState } from 'react'
 import { Link } from 'react-router'
 
 import { customerSchema, type CustomerInput } from '@/features/customers/schema'
@@ -8,7 +9,7 @@ import { Input } from '@/shared/ui/input'
 
 type Props = {
   initialValues?: CustomerInput
-  onSubmit: (values: CustomerInput) => void
+  onSubmit: (values: CustomerInput) => Promise<void>
   cancelTo: string
   submitLabel: string
 }
@@ -21,6 +22,7 @@ export function CustomerForm({
   cancelTo,
   submitLabel,
 }: Props) {
+  const [submitError, setSubmitError] = useState('')
   const {
     register,
     handleSubmit,
@@ -33,7 +35,16 @@ export function CustomerForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(async (values) => {
+        setSubmitError('')
+        try {
+          await onSubmit(values)
+        } catch {
+          setSubmitError(
+            'Não foi possível salvar. Confira sua conexão e tente novamente.',
+          )
+        }
+      })}
       noValidate
       className="mt-7 max-w-2xl space-y-5 rounded-lg border border-border bg-surface p-5 sm:p-8"
     >
@@ -154,6 +165,11 @@ export function CustomerForm({
           </p>
         )}
       </div>
+      {submitError && (
+        <p role="alert" className="text-sm text-[#a13d31]">
+          {submitError}
+        </p>
+      )}
       <div className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:justify-end">
         <Button asChild variant="outline">
           <Link to={cancelTo}>Cancelar</Link>

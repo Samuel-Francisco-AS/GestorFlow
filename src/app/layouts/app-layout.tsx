@@ -1,4 +1,6 @@
 import { ClipboardList, LayoutDashboard, UsersRound } from 'lucide-react'
+import { useAuth } from '@/features/auth/auth-context'
+import { Button } from '@/shared/ui/button'
 import { NavLink, Outlet } from 'react-router'
 
 const links = [
@@ -20,6 +22,7 @@ const links = [
 ]
 
 export function AppLayout() {
+  const { mode, leave } = useAuth()
   return (
     <div className="min-h-svh bg-background lg:grid lg:grid-cols-[248px_minmax(0,1fr)]">
       <a
@@ -90,8 +93,16 @@ export function AppLayout() {
             Seu espaço de trabalho
           </span>
           <span className="rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-primary">
-            Ambiente de demonstração
+            {mode === 'demo' ? 'Ambiente de demonstração' : 'Conta pessoal'}
           </span>
+          <Button
+            variant="outline"
+            onClick={() => {
+              void leave()
+            }}
+          >
+            Sair
+          </Button>
         </header>
         <main
           id="conteudo"

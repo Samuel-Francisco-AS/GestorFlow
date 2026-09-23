@@ -10,6 +10,7 @@ test('pesquisa, detalhe, cadastro e edição de cliente', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
   await page
     .getByRole('navigation', { name: 'Navegação principal' })
     .getByRole('link', { name: 'Clientes' })
@@ -88,6 +89,7 @@ for (const width of [360, 390]) {
     page.on('pageerror', (error) => errors.push(error.message))
     await page.setViewportSize({ width, height: 780 })
     await page.goto('/')
+    await page.getByRole('button', { name: 'Explorar demonstração' }).click()
     await page
       .getByRole('navigation', { name: 'Navegação mobile' })
       .getByRole('link', { name: 'Clientes' })

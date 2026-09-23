@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { PropsWithChildren } from 'react'
 import { BrowserRouter } from 'react-router'
+import { AuthProvider } from '@/features/auth/auth-provider'
 import { CustomerProvider } from '@/features/customers/customer-store'
 import { WorkOrderProvider } from '@/features/work-orders/work-order-store'
 
@@ -11,11 +12,13 @@ const queryClient = new QueryClient({
 export function AppProviders({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomerProvider>
-        <WorkOrderProvider>
-          <BrowserRouter>{children}</BrowserRouter>
-        </WorkOrderProvider>
-      </CustomerProvider>
+      <AuthProvider>
+        <CustomerProvider>
+          <WorkOrderProvider>
+            <BrowserRouter>{children}</BrowserRouter>
+          </WorkOrderProvider>
+        </CustomerProvider>
+      </AuthProvider>
     </QueryClientProvider>
   )
 }

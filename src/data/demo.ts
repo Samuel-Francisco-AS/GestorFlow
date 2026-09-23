@@ -51,7 +51,8 @@ export const demoCustomers = [
 
 export const demoOrders: WorkOrder[] = [
   {
-    id: 'OS-1048',
+    id: 'demo-order-1048',
+    code: 'OS-1048',
     customerId: 'marina',
     title: 'Identidade visual',
     description:
@@ -62,7 +63,8 @@ export const demoOrders: WorkOrder[] = [
     date: '2026-09-22',
   },
   {
-    id: 'OS-1047',
+    id: 'demo-order-1047',
+    code: 'OS-1047',
     customerId: 'aurora',
     title: 'Manutenção de equipamentos',
     description: 'Revisão preventiva dos equipamentos do café.',
@@ -72,7 +74,8 @@ export const demoOrders: WorkOrder[] = [
     date: '2026-09-20',
   },
   {
-    id: 'OS-1046',
+    id: 'demo-order-1046',
+    code: 'OS-1046',
     customerId: 'joao',
     title: 'Instalação de rede',
     description: 'Instalação e configuração da rede do escritório.',
@@ -82,7 +85,8 @@ export const demoOrders: WorkOrder[] = [
     date: '2026-09-18',
   },
   {
-    id: 'OS-1045',
+    id: 'demo-order-1045',
+    code: 'OS-1045',
     customerId: 'estrela',
     title: 'Atualização do site',
     description: 'Atualização das páginas de serviços e contato.',
@@ -92,7 +96,8 @@ export const demoOrders: WorkOrder[] = [
     date: '2026-09-14',
   },
   {
-    id: 'OS-1044',
+    id: 'demo-order-1044',
+    code: 'OS-1044',
     customerId: 'ana',
     title: 'Material de divulgação',
     description: 'Produção de peças para divulgação da nova campanha.',
@@ -102,7 +107,8 @@ export const demoOrders: WorkOrder[] = [
     date: '2026-09-09',
   },
   {
-    id: 'OS-1043',
+    id: 'demo-order-1043',
+    code: 'OS-1043',
     customerId: 'ana',
     title: 'Revisão de peças digitais',
     description: 'Ajustes nas peças digitais existentes.',

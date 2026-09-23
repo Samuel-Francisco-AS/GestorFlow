@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-3 — Gate técnico concluído; revisão visual humana pendente
+**Fase:** GF-4 — Gate técnico concluído; revisão visual humana pendente
 
-**Próxima fase:** GF-4 — Persistência, ainda não iniciada
+**Próxima fase:** GF-5 — Dashboard real
 
 **MVP:** em execução
 **Deploy:** inexistente  
@@ -97,7 +97,7 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | GF-1 | Shell visual | 1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-2 | Clientes | 1–1,5 dia | Gate técnico concluído; revisão visual pendente |
 | GF-3 | Ordens | 1,5–2 dias | Gate técnico concluído; revisão visual pendente |
-| GF-4 | Persistência | 1 dia | Pendente |
+| GF-4 | Persistência | 1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-5 | Dashboard real | 0,5–1 dia | Pendente |
 | GF-6 | Polish | 1–2 dias | Pendente |
 | GF-7 | Demo & deploy | 0,5–1 dia | Pendente |
@@ -113,9 +113,13 @@ GF-2 implementou listagem, pesquisa, ficha de leitura, cadastro e edição de cl
 
 GF-3 implementou modelo e store em memória para ordens, lista com pesquisa e filtro de status, detalhe, criação, edição e alteração de status. A ficha do cliente consulta as ordens correntes, e a criação iniciada nela traz o cliente preenchido. O dashboard oferece o caminho para criar uma ordem, mas suas métricas e listas continuam demonstrativas; sua derivação do estado atual pertence à GF-5. As mudanças nas ordens são perdidas ao recarregar. Supabase e persistência real continuam em GF-4. Os testes automatizados incluem os fluxos de Clientes e Ordens em desktop e viewports mobile de 360px e 390px. A revisão visual humana permanece separada; não houve teste físico em smartphone.
 
+## GF-4
+
+Supabase Auth por e-mail e senha, entrada demo sem cadastro e recuperação de sessão estão integrados. Os contratos de CustomerRepository e WorkOrderRepository têm implementações locais e Supabase. A UI acessa as entidades pelos providers com TanStack Query; RLS protege clientes e ordens do usuário autenticado. A migration do schema remoto existente foi versionada localmente, sem alteração remota. O MVP não permite DELETE. Variáveis públicas: `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`; sem elas, a demo continua disponível. GF-5 permanece pendente: o dashboard ainda usa métricas fixas de demonstração.
+
 ## Próximo passo
 
-Revisar visualmente GF-1, GF-2 e GF-3. Após autorização separada, GF-4 tratará da persistência real.
+Executar GF-5 para derivar o dashboard dos dados correntes.
 
 A primeira implementação deve preservar a prioridade do projeto:
 

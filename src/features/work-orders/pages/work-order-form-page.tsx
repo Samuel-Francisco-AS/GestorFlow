@@ -1,3 +1,4 @@
+import { localDate } from '@/shared/lib/local-date'
 import { ArrowLeft } from 'lucide-react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 
@@ -11,9 +12,11 @@ export function WorkOrderFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { customers } = useCustomers()
-  const { orders, createOrder, updateOrder } = useWorkOrders()
+  const { orders, loading, createOrder, updateOrder } = useWorkOrders()
   const order = orders.find((item) => item.id === id)
   const editing = mode === 'edit'
+
+  if (loading) return <p role="status">Carregando ordens...</p>
 
   if (editing && !order)
     return (
@@ -50,20 +53,20 @@ export function WorkOrderFormPage({ mode }: { mode: 'create' | 'edit' }) {
         description: '',
         value: 0,
         status: 'new',
-        date: new Date().toISOString().slice(0, 10),
+        date: localDate(),
         notes: '',
       }
   const backTo = editing && order ? `/ordens/${order.id}` : '/ordens'
 
-  function save(values: WorkOrderInput) {
+  async function save(values: WorkOrderInput) {
     if (!customers.some((customer) => customer.id === values.customerId)) return
     if (editing && order) {
-      updateOrder(order.id, values)
+      await updateOrder(order.id, values)
       navigate(`/ordens/${order.id}`, {
         state: { flash: 'Ordem atualizada com sucesso.' },
       })
     } else {
-      const created = createOrder(values)
+      const created = await createOrder(values)
       navigate(`/ordens/${created.id}`, {
         state: { flash: 'Ordem criada com sucesso.' },
       })

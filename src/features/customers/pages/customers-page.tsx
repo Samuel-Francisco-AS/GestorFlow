@@ -8,9 +8,15 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 
 export function CustomersPage() {
-  const { customers } = useCustomers()
+  const { customers, loading, error } = useCustomers()
   const [query, setQuery] = useState('')
   const filtered = searchCustomers(customers, query)
+
+  if (loading) return <p role="status">Carregando clientes...</p>
+  if (error)
+    return (
+      <p role="alert">Não foi possível carregar clientes. Tente novamente.</p>
+    )
 
   return (
     <div>

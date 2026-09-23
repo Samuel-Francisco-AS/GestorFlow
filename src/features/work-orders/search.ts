@@ -20,7 +20,7 @@ export function filterWorkOrders(
   return orders.filter((order) => {
     if (status !== 'all' && order.status !== status) return false
     return normalize(
-      [order.id, customerNames.get(order.customerId) ?? '', order.title].join(
+      [order.code, customerNames.get(order.customerId) ?? '', order.title].join(
         ' ',
       ),
     ).includes(term)

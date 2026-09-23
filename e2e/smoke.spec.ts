@@ -4,6 +4,7 @@ test('dashboard, shell desktop e rota desconhecida', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
   await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
   await expect(
     page.getByRole('heading', { name: 'Ordens recentes' }),
@@ -41,6 +42,7 @@ for (const width of [360, 390]) {
     page.on('pageerror', (error) => errors.push(error.message))
     await page.setViewportSize({ width, height: 780 })
     await page.goto('/')
+    await page.getByRole('button', { name: 'Explorar demonstração' }).click()
     await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
     await expect(
       page.getByRole('navigation', { name: 'Navegação mobile' }),
@@ -58,3 +60,42 @@ for (const width of [360, 390]) {
     })
   })
 }
+
+test('demo funciona sem Supabase e reinicia mutações no reload', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Clientes' })
+    .click()
+  await page.getByRole('link', { name: 'Novo cliente' }).click()
+  await page.getByRole('textbox', { name: /Nome/ }).fill('Cliente descartável')
+  await page.getByRole('button', { name: 'Cadastrar cliente' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Cliente descartável' }),
+  ).toBeVisible()
+  await page.reload()
+  await expect(
+    page.getByRole('heading', { name: 'Cliente não encontrado' }),
+  ).toBeVisible()
+  await page.getByRole('link', { name: 'Voltar para clientes' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Clientes', exact: true }),
+  ).toBeVisible()
+})
+
+test('entrada oferece autenticação e cadastro sem depender de serviço remoto', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Entrar' })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar' }).click()
+  await page.getByRole('button', { name: 'Criar conta' }).click()
+  await expect(page.getByRole('heading', { name: 'Criar conta' })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar' }).click()
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+  await expect(page.getByRole('heading', { name: /Bom dia/ })).toBeVisible()
+})

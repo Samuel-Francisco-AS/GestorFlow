@@ -9,6 +9,7 @@ export type WorkOrderStatus = (typeof workOrderStatuses)[number]
 
 export type WorkOrder = {
   id: string
+  code: string
   customerId: string
   title: string
   description: string
@@ -25,9 +26,9 @@ export const workOrderStatusLabel: Record<WorkOrderStatus, string> = {
   completed: 'Concluído',
 }
 
-export function nextWorkOrderId(orders: WorkOrder[]) {
+export function nextWorkOrderCode(orders: WorkOrder[]) {
   const highest = orders.reduce((max, order) => {
-    const number = /^OS-(\d+)$/.exec(order.id)?.[1]
+    const number = /^OS-(\d+)$/.exec(order.code)?.[1]
     return number ? Math.max(max, Number(number)) : max
   }, 0)
   return `OS-${String(highest + 1).padStart(4, '0')}`

@@ -8,10 +8,12 @@ import { Button } from '@/shared/ui/button'
 
 export function CustomerDetailPage() {
   const { id } = useParams()
-  const { customers } = useCustomers()
+  const { customers, loading } = useCustomers()
   const { orders: allOrders } = useWorkOrders()
   const location = useLocation()
   const customer = customers.find((item) => item.id === id)
+
+  if (loading) return <p role="status">Carregando clientes...</p>
 
   if (!customer)
     return (
@@ -58,7 +60,13 @@ export function CustomerDetailPage() {
               month: 'long',
               year: 'numeric',
               timeZone: 'UTC',
-            }).format(new Date(`${customer.createdAt}T12:00:00Z`))}
+            }).format(
+              new Date(
+                customer.createdAt.length === 10
+                  ? `${customer.createdAt}T12:00:00Z`
+                  : customer.createdAt,
+              ),
+            )}
           </p>
         </div>
         <Button asChild variant="outline">
@@ -139,7 +147,7 @@ export function CustomerDetailPage() {
                       {order.title}
                     </Link>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {order.id} · {formatDate(order.date)} ·{' '}
+                      {order.code} · {formatDate(order.date)} ·{' '}
                       {orderStatusLabel[order.status]}
                     </p>
                   </div>

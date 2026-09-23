@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { demoCustomers, demoOrders } from '@/data/demo'
-import { nextWorkOrderId } from '@/features/work-orders/model'
+import { nextWorkOrderCode } from '@/features/work-orders/model'
 import { workOrderSchema } from '@/features/work-orders/schema'
 import { filterWorkOrders } from '@/features/work-orders/search'
 
@@ -36,12 +36,12 @@ describe('ordens de serviço', () => {
       filterWorkOrders(demoOrders, demoCustomers, 'os-1048', 'all').map(
         (order) => order.id,
       ),
-    ).toEqual(['OS-1048'])
+    ).toEqual(['demo-order-1048'])
     expect(
       filterWorkOrders(demoOrders, demoCustomers, 'cafe aurora', 'waiting').map(
         (order) => order.id,
       ),
-    ).toEqual(['OS-1047'])
+    ).toEqual(['demo-order-1047'])
     expect(
       filterWorkOrders(demoOrders, demoCustomers, 'identidade', 'waiting'),
     ).toEqual([])
@@ -49,13 +49,13 @@ describe('ordens de serviço', () => {
       filterWorkOrders(demoOrders, demoCustomers, 'revisao', 'all').map(
         (order) => order.id,
       ),
-    ).toEqual(['OS-1043'])
+    ).toEqual(['demo-order-1043'])
   })
 
   it('gera o próximo ID sem reutilizar um número da sessão', () => {
-    expect(nextWorkOrderId(demoOrders)).toBe('OS-1049')
+    expect(nextWorkOrderCode(demoOrders)).toBe('OS-1049')
     expect(
-      nextWorkOrderId([{ ...demoOrders[0], id: 'OS-9999' }, ...demoOrders]),
+      nextWorkOrderCode([{ ...demoOrders[0], code: 'OS-9999' }, ...demoOrders]),
     ).toBe('OS-10000')
   })
 })

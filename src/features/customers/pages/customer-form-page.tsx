@@ -8,9 +8,11 @@ import type { CustomerInput } from '@/features/customers/schema'
 export function CustomerFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { customers, createCustomer, updateCustomer } = useCustomers()
+  const { customers, loading, createCustomer, updateCustomer } = useCustomers()
   const customer = customers.find((item) => item.id === id)
   const editing = mode === 'edit'
+
+  if (loading) return <p role="status">Carregando clientes...</p>
 
   if (editing && !customer)
     return (
@@ -25,14 +27,14 @@ export function CustomerFormPage({ mode }: { mode: 'create' | 'edit' }) {
       </section>
     )
 
-  function save(values: CustomerInput) {
+  async function save(values: CustomerInput) {
     if (editing && customer) {
-      updateCustomer(customer.id, values)
+      await updateCustomer(customer.id, values)
       navigate(`/clientes/${customer.id}`, {
         state: { flash: 'Cliente atualizado com sucesso.' },
       })
     } else {
-      const created = createCustomer(values)
+      const created = await createCustomer(values)
       navigate(`/clientes/${created.id}`, {
         state: { flash: 'Cliente cadastrado com sucesso.' },
       })
