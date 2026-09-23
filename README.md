@@ -153,7 +153,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-O schema remoto existente está registrado em `supabase/migrations/20260923175233_gf4_initial_persistence_schema.sql` para versionamento e instalações futuras. Não aplique essa migration novamente ao projeto já configurado. RLS limita leitura, criação e atualização ao proprietário; o MVP não inclui exclusão. A UI usa repositories demo/Supabase sob contratos comuns e TanStack Query para consultas, mutations e invalidação. O dashboard deriva métricas, ordens recentes e atenção das ordens correntes, tanto na demo quanto em contas persistentes.
+O schema remoto existente está registrado em `supabase/migrations/20260923175233_gf4_initial_persistence_schema.sql` para versionamento e instalações futuras. Não aplique essa migration novamente ao projeto já configurado. Uma reconstrução em projeto novo requer a opção de RLS automático do Supabase, que cria a função `public.rls_auto_enable()` usada pela migration. RLS limita leitura, criação e atualização ao proprietário; o MVP não inclui exclusão. A UI usa repositories demo/Supabase sob contratos comuns e TanStack Query para consultas, mutations e invalidação. O dashboard deriva métricas, ordens recentes e atenção das ordens correntes, tanto na demo quanto em contas persistentes.
 
 ## Licença
 

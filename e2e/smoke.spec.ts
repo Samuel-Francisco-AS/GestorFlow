@@ -105,3 +105,31 @@ test('entrada oferece autenticação e cadastro sem depender de serviço remoto'
     page.getByRole('heading', { name: /(Bom dia|Boa tarde|Boa noite)/ }),
   ).toBeVisible()
 })
+
+test('sair da demo limpa os dados antes de uma nova entrada', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Clientes' })
+    .click()
+  await page.getByRole('link', { name: 'Novo cliente' }).click()
+  await page.getByRole('textbox', { name: /Nome/ }).fill('Cliente temporário')
+  await page.getByRole('button', { name: 'Cadastrar cliente' }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Cliente temporário' }),
+  ).toBeVisible()
+
+  await page.getByRole('button', { name: 'Sair' }).click()
+  await expect(
+    page.getByRole('button', { name: 'Explorar demonstração' }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Clientes' })
+    .click()
+  await expect(page.getByText('Cliente temporário')).toHaveCount(0)
+})

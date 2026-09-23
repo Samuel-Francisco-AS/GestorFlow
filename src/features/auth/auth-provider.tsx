@@ -1,14 +1,16 @@
 import { AuthContext } from '@/features/auth/auth-context'
-import { useEffect, useState, type PropsWithChildren } from 'react'
+import { useEffect, useRef, useState, type PropsWithChildren } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/data/supabase/client'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { shouldClearSessionCache } from '@/features/auth/session-transition'
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient()
   const [session, setSession] = useState<Session | null>(null)
+  const currentUserId = useRef<string | null>(null)
   const [ready, setReady] = useState(!supabase)
   const [demo, setDemo] = useState(
     () => sessionStorage.getItem('gestorflow-mode') === 'demo',
@@ -21,11 +23,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (!supabase) return
     let active = true
+    let authEventReceived = false
+    const applySession = (next: Session | null) => {
+      const nextUserId = next?.user.id ?? null
+      if (shouldClearSessionCache(currentUserId.current, nextUserId)) {
+        queryClient.clear()
+      }
+      currentUserId.current = nextUserId
+      setSession(next)
+      if (next) {
+        sessionStorage.removeItem('gestorflow-mode')
+        setDemo(false)
+      }
+    }
     supabase.auth
       .getSession()
       .then(({ data }) => {
         if (active) {
-          setSession(data.session)
+          if (!authEventReceived) applySession(data.session)
           setReady(true)
         }
       })
@@ -35,12 +50,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, next) => {
         if (active) {
-          if (session?.user.id !== next?.user.id) queryClient.clear()
-          setSession(next)
-          if (next) {
-            sessionStorage.removeItem('gestorflow-mode')
-            setDemo(false)
-          }
+          authEventReceived = true
+          applySession(next)
+          setReady(true)
         }
       },
     )
@@ -48,12 +60,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       active = false
       listener.subscription.unsubscribe()
     }
-    // Session transitions must be handled by the listener without resubscribing.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryClient])
   async function leave() {
     if (session && supabase) await supabase.auth.signOut()
     queryClient.clear()
+    currentUserId.current = null
     sessionStorage.removeItem('gestorflow-mode')
     setSession(null)
     setDemo(false)
