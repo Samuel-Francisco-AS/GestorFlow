@@ -3,6 +3,7 @@ import {
   type WorkOrder,
   type WorkOrderStatus,
 } from '@/features/work-orders/model'
+import { localDate } from '@/shared/lib/local-date'
 
 export type DemoOrderStatus = WorkOrderStatus
 
@@ -49,7 +50,7 @@ export const demoCustomers = [
   },
 ]
 
-export const demoOrders: WorkOrder[] = [
+const demoOrderTemplates: Omit<WorkOrder, 'date'>[] = [
   {
     id: 'demo-order-1048',
     code: 'OS-1048',
@@ -60,7 +61,6 @@ export const demoOrders: WorkOrder[] = [
     notes: 'Apresentar propostas iniciais na próxima reunião.',
     status: 'in_progress',
     value: 1850,
-    date: '2026-09-22',
   },
   {
     id: 'demo-order-1047',
@@ -71,7 +71,6 @@ export const demoOrders: WorkOrder[] = [
     notes: 'Aguardando confirmação de horário.',
     status: 'waiting',
     value: 640,
-    date: '2026-09-20',
   },
   {
     id: 'demo-order-1046',
@@ -82,7 +81,6 @@ export const demoOrders: WorkOrder[] = [
     notes: '',
     status: 'in_progress',
     value: 980,
-    date: '2026-09-18',
   },
   {
     id: 'demo-order-1045',
@@ -93,7 +91,6 @@ export const demoOrders: WorkOrder[] = [
     notes: '',
     status: 'completed',
     value: 2200,
-    date: '2026-09-14',
   },
   {
     id: 'demo-order-1044',
@@ -104,7 +101,6 @@ export const demoOrders: WorkOrder[] = [
     notes: '',
     status: 'completed',
     value: 760,
-    date: '2026-09-09',
   },
   {
     id: 'demo-order-1043',
@@ -115,9 +111,25 @@ export const demoOrders: WorkOrder[] = [
     notes: 'Aguardando retorno sobre as versões enviadas.',
     status: 'waiting',
     value: 420,
-    date: '2026-09-05',
   },
 ]
+
+const demoDayOffsets = [0, 2, 4, 8, 13, 17]
+
+export function createDemoOrders(referenceDate: Date): WorkOrder[] {
+  return demoOrderTemplates.map((order, index) => ({
+    ...order,
+    date: localDate(
+      new Date(
+        referenceDate.getFullYear(),
+        referenceDate.getMonth(),
+        Math.max(1, referenceDate.getDate() - demoDayOffsets[index]),
+      ),
+    ),
+  }))
+}
+
+export const demoOrders = createDemoOrders(new Date())
 
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(

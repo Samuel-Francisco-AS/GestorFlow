@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { demoOrders } from '@/data/demo'
+import { createDemoOrders } from '@/data/demo'
 import { deriveDashboardMetrics } from '@/features/dashboard/metrics'
 
 describe('dashboard derivado das ordens correntes', () => {
   it('calcula status e faturamento somente das concluídas do mês local', () => {
-    const metrics = deriveDashboardMetrics(demoOrders, new Date(2026, 8, 23))
+    const referenceDate = new Date(2026, 8, 23)
+    const metrics = deriveDashboardMetrics(
+      createDemoOrders(referenceDate),
+      referenceDate,
+    )
     expect(metrics.inProgress).toBe(2)
     expect(metrics.waiting).toBe(2)
     expect(metrics.completedThisMonth).toBe(2)
@@ -16,8 +20,10 @@ describe('dashboard derivado das ordens correntes', () => {
   })
   it('muda com o mês e com dados vazios', () => {
     expect(
-      deriveDashboardMetrics(demoOrders, new Date(2026, 9, 1))
-        .completedThisMonth,
+      deriveDashboardMetrics(
+        createDemoOrders(new Date(2026, 8, 23)),
+        new Date(2026, 9, 1),
+      ).completedThisMonth,
     ).toBe(0)
     expect(deriveDashboardMetrics([], new Date(2026, 8, 23))).toMatchObject({
       inProgress: 0,
@@ -29,6 +35,7 @@ describe('dashboard derivado das ordens correntes', () => {
     })
   })
   it('ordena ordens recentes por data com desempate estável', () => {
+    const demoOrders = createDemoOrders(new Date(2026, 8, 23))
     const metrics = deriveDashboardMetrics(
       [
         demoOrders[1],

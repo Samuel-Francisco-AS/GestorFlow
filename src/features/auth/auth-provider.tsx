@@ -6,6 +6,12 @@ import { supabase } from '@/data/supabase/client'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { shouldClearSessionCache } from '@/features/auth/session-transition'
+import { publicSignupEnabled } from '@/features/auth/public-signup'
+
+const signupEnabled = publicSignupEnabled(
+  import.meta.env.VITE_PUBLIC_SIGNUP_ENABLED,
+  import.meta.env.DEV,
+)
 
 function authMessage(error: unknown) {
   if (!(error instanceof Error))
@@ -87,12 +93,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
   async function submit(event: React.FormEvent) {
     event.preventDefault()
-    if (!supabase || pending) return
+    if (!supabase || pending || (screen === 'signup' && !signupEnabled)) return
     setPending(true)
     setMessage('')
     try {
       if (screen === 'signup') {
-        const { data, error } = await supabase.auth.signUp({ email, password })
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: new URL('/', window.location.origin).href,
+          },
+        })
         if (error) throw error
         setMessage(
           data.session
@@ -157,15 +169,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
             >
               Entrar
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setScreen('signup')
-                setMessage('')
-              }}
-            >
-              Criar conta
-            </Button>
+            {signupEnabled && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setScreen('signup')
+                  setMessage('')
+                }}
+              >
+                Criar conta
+              </Button>
+            )}
           </div>
         ) : (
           <form onSubmit={submit} className="mt-7 space-y-4">

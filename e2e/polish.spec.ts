@@ -60,7 +60,7 @@ test('falha de mutation mantém status real e mostra somente erro', async ({
   await mockModule(page, 'data/repositories/demo', (body) =>
     body.replace(
       'async updateStatus(id, status) {',
-      'async updateStatus(id, status) { await new Promise(resolve => setTimeout(resolve, 80)); throw new Error("Falha simulada");',
+      'async updateStatus(id, status) { await new Promise(resolve => setTimeout(resolve, 1000)); throw new Error("Falha simulada");',
     ),
   )
   await enterDemo(page)
@@ -159,8 +159,8 @@ test('base vazia e pesquisa sem resultados têm orientações distintas', async 
 }) => {
   await mockModule(page, 'data/demo', (body) =>
     body.replace(
-      'export const demoOrders = [',
-      'export const demoOrders = []; export const unusedOrders = [',
+      'export const demoOrders = createDemoOrders(new Date())',
+      'export const demoOrders = []',
     ),
   )
   await enterDemo(page)
@@ -171,6 +171,46 @@ test('base vazia e pesquisa sem resultados têm orientações distintas', async 
   await expect(
     page.getByText('Ajuste a pesquisa ou o filtro de status.'),
   ).toHaveCount(0)
+})
+
+test('conta autenticada recém-criada apresenta estados vazios sem serviço remoto', async ({
+  page,
+}) => {
+  await mockModule(
+    page,
+    'data/supabase/client',
+    () => `
+    const session = { user: { id: 'new-user' } }
+    export const supabase = {
+      auth: {
+        getSession: async () => ({ data: { session } }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+        signOut: async () => ({ error: null }),
+      },
+    }
+  `,
+  )
+  await mockModule(
+    page,
+    'data/repositories/supabase',
+    () => `
+    export class SupabaseCustomerRepository { async list() { return [] } }
+    export class SupabaseWorkOrderRepository { async list() { return [] } }
+  `,
+  )
+  await page.goto('/')
+  await expect(page.getByTestId('metric-completed')).toContainText('0')
+  await expect(page.getByTestId('metric-revenue')).toContainText('R$ 0,00')
+  await expect(
+    page.getByRole('region', { name: 'Ordens recentes' }),
+  ).toContainText('Nenhuma ordem registrada.')
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Clientes' })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Sua lista começa aqui' }),
+  ).toBeVisible()
 })
 
 test('pesquisa sem resultados em base populada', async ({ page }) => {

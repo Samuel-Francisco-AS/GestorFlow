@@ -1,5 +1,87 @@
 import { expect, test } from '@playwright/test'
 
+test('golden path público da demo funciona sem requisições externas e reinicia no reload', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  const externalRequests: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.route('**/*', (route) => {
+    if (new URL(route.request().url()).origin === 'http://127.0.0.1:4173')
+      return route.continue()
+    externalRequests.push(route.request().url())
+    return route.abort()
+  })
+
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+  await expect(page.getByTestId('metric-completed')).toContainText('2')
+  await expect(page.getByTestId('metric-revenue')).toContainText('R$ 2.960,00')
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Clientes' })
+    .click()
+  await page.getByRole('link', { name: /Marina Albuquerque/ }).click()
+  await expect(
+    page.getByRole('heading', { name: 'Marina Albuquerque' }),
+  ).toBeVisible()
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Ordens de serviço' })
+    .click()
+  await page.getByRole('link', { name: 'Nova ordem' }).last().click()
+  await page.getByLabel('Cliente', { exact: false }).selectOption('marina')
+  await page
+    .getByRole('textbox', { name: /Título\/serviço/ })
+    .fill('Serviço público descartável')
+  await page.getByLabel('Valor (R$)').fill('300')
+  await page.getByRole('button', { name: 'Criar ordem' }).click()
+  await page.getByLabel('Status da ordem').selectOption('in_progress')
+  await expect(page.getByRole('status').last()).toHaveText('Status atualizado.')
+  await page
+    .getByRole('navigation', { name: 'Navegação principal' })
+    .getByRole('link', { name: 'Visão geral' })
+    .click()
+  await page
+    .getByRole('region', { name: 'Ordens recentes' })
+    .getByRole('link', { name: /Serviço público descartável/ })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Serviço público descartável' }),
+  ).toBeVisible()
+  await page.reload()
+  await expect(
+    page.getByRole('heading', { name: 'Ordem não encontrada' }),
+  ).toBeVisible()
+  await page.goto('/')
+  await expect(page.getByTestId('metric-completed')).toContainText('2')
+  await expect(page.getByTestId('metric-in-progress')).toContainText('2')
+  await expect(
+    page.getByRole('region', { name: 'Ordens recentes' }),
+  ).not.toContainText('Serviço público descartável')
+  expect(errors).toEqual([])
+  expect(externalRequests).toEqual([])
+})
+
+test('rotas principais abrem diretamente com a demo ativa', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Explorar demonstração' }).click()
+
+  for (const [path, heading] of [
+    ['/clientes', 'Clientes'],
+    ['/clientes/marina', 'Marina Albuquerque'],
+    ['/ordens', 'Ordens de serviço'],
+    ['/ordens/demo-order-1048', 'Identidade visual'],
+  ]) {
+    await page.goto(path)
+    await expect(
+      page.getByRole('heading', { name: heading, exact: true }),
+    ).toBeVisible()
+  }
+})
+
 test('ordem recente abre a ficha pelo clique na linha e pelo teclado', async ({
   page,
 }) => {

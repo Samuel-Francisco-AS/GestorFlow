@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-6 — Gate técnico concluído; revisão visual humana pendente
+**Fase:** GF-7A — Preparação técnica concluída; deploy e validação pública pendentes
 
-**Próxima fase:** GF-7 — Demo & deploy
+**Próxima fase:** GF-7B — Deploy e validação
 
 **MVP:** em execução
 **Deploy:** inexistente  
@@ -100,7 +100,8 @@ Os mockups conceituais de dashboard, clientes, detalhe do cliente e ordens serve
 | GF-4 | Persistência | 1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-5 | Dashboard real | 0,5–1 dia | Gate técnico concluído; revisão visual pendente |
 | GF-6 | Polish | 1–2 dias | Gate técnico concluído; revisão visual humana pendente |
-| GF-7 | Demo & deploy | 0,5–1 dia | Pendente |
+| GF-7A | Preparação técnica para deploy | — | Gate técnico concluído; publicação pendente |
+| GF-7B | Deploy e validação | — | Pendente |
 
 Janela desejada: **7–10 dias**.  
 Teto absoluto: **14 dias**.
@@ -127,9 +128,21 @@ O seletor de status salva automaticamente e comunica andamento, sucesso confirma
 
 Permanecem pendentes a revisão visual humana, o teste de isolamento entre duas contas distintas e a validação física no Moto G06, adiada até haver acesso pela internet. Integração remota e publicação pública não foram executadas nesta fase.
 
+## GF-7A
+
+GF-7A — Preparação técnica concluída; deploy e validação pública pendentes.
+
+As datas das ordens demo são relativas ao mês e ao dia locais, com códigos, IDs, serviços, status e valores preservados. A demo continua em memória, sem login, variáveis Supabase ou persistência entre recargas. O golden path local é testado com requisições externas bloqueadas. A conta real mantém Supabase Auth, PostgreSQL e RLS sem mudanças de schema ou dados remotos.
+
+O cadastro público fica oculto por padrão no build de produção por `VITE_PUBLIC_SIGNUP_ENABLED`; o desenvolvimento local mantém o formulário disponível se a flag estiver ausente ou for `true`. A flag é apresentação de produto, não controle de segurança do backend. O SMTP padrão do Supabase limita o envio de confirmações a endereços autorizados; cadastro externo irrestrito permanece indisponível até infraestrutura e configuração de Auth adequadas. O `signUp` usa a origem atual da aplicação como retorno à rota raiz. Login de contas existentes e demo continuam acessíveis.
+
+Destino planejado: Cloudflare Pages via integração Git, branch `main`, `npm run build`, saída `dist`, Node.js 24. A ausência de `404.html` permite o fallback SPA padrão do Pages; confirmação das rotas por acesso direto ocorrerá após publicação. Configurar as variáveis públicas de produção do Pages e, depois de atribuído o domínio, Site URL e Redirect URLs no Supabase. O projeto depende dos limites gratuitos de Pages e Supabase para manter R$ 0/mês; o Supabase Free pode pausar por inatividade, afetando apenas contas persistentes enquanto estiver pausado.
+
+Permanecem pendentes GF-7B, publicação pública, teste de confirmação por e-mail e recarga em rotas no domínio real, teste físico no Moto G06, revisão visual humana, estado vazio de conta real recém-criada e prova E2E de isolamento entre duas contas reais. O MVP ainda não está publicado nem concluído.
+
 ## Próximo passo
 
-GF-7 — Demo & deploy, após a revisão humana pendente.
+GF-7B — Deploy e validação, com o usuário após auditoria.
 
 A primeira implementação deve preservar a prioridade do projeto:
 
