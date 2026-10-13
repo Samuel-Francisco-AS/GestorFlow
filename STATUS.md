@@ -2,7 +2,9 @@
 
 ## Estado atual
 
-**Fase:** GF-7C — fechamento documental da GF-7
+**Fase atual:** GF-8 — planejada, não iniciada (ciclo 2)
+
+**Marco anterior:** GF-7C — fechamento documental da GF-7
 
 **GF-7A:** preparação técnica concluída
 
@@ -174,3 +176,20 @@ A implementação preserva a prioridade do projeto:
 > produto pequeno, visualmente forte, funcional e terminável.
 
 Se uma decisão técnica aumentar significativamente o prazo sem melhorar o MVP ou sua capacidade real de evolução, ela deve ser rejeitada ou adiada.
+
+
+## Ciclo 2 — GF-8 a GF-12 (planejamento aprovado em 2026-10-13)
+
+O fechamento GF-7C e o MVP de portfólio **permanecem concluídos**. Novo roteiro: [docs/GF-8-12-ROADMAP.md](./docs/GF-8-12-ROADMAP.md).
+
+| Fase | Finalidade | Estado |
+| --- | --- | --- |
+| GF-8 | Recovery & Operations; integridade, segurança, backup e estudo Azure | Planejada; próxima |
+| GF-9 | UI/UX Evolution, motion, gráficos e polish desktop/mobile | Planejada |
+| GF-10 | Orçamentos e PDF | Planejada |
+| GF-11 | Finance Lite | Planejada |
+| GF-12 | Agenda e prazos | Planejada |
+
+**Checkpoint operacional (13/10/2026):** o Supabase Free havia pausado por inatividade; restauração solicitada com sucesso e projeto `ACTIVE_HEALTHY`. Contagem SQL somente leitura: 2 clientes e 2 ordens. RLS habilitada nas duas tabelas, migration GF-4 existente. **Ainda não validados após retomada:** login real pelo Pages, mutation, isolamento entre contas e backup/restauração. Security Advisor: alerta de proteção contra senhas vazadas desabilitada.
+
+**Decisões:** preservar Pages + Supabase até GF-8E avaliar Azure for Students ou alternativas; não gastar créditos/provisionar serviços; priorizar GF-9 UI/UX antes dos módulos GF-10 a GF-12. Este registro é somente documental, não código/infra.
