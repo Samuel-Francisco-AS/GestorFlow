@@ -106,6 +106,7 @@ A interface não deverá depender diretamente do provedor de backend. O acesso a
 - [PRODUCT.md](./PRODUCT.md) — contrato de produto, escopo e experiência do MVP.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — stack, estrutura, fronteiras e decisões técnicas.
 - [STATUS.md](./STATUS.md) — estado atual, fases, gates e próximos passos.
+- [docs/GF-8-12-ROADMAP.md](./docs/GF-8-12-ROADMAP.md) — evolução planejada: operação, redesign UI/UX 2.0, orçamentos, financeiro e agenda.
 
 ## Escopo inicial
 
@@ -168,6 +169,13 @@ O build não gera `404.html` de nível superior. O Pages serve o documento raiz 
 O `signUp` envia `emailRedirectTo` derivado da origem atual, sempre na rota raiz, sem parâmetro de destino fornecido pelo usuário. A validação acima não inclui uma nova verificação documental do fluxo de confirmação por e-mail ou de todas as recargas de rotas internas.
 
 Na auditoria simulada com o papel `authenticated`, outra identidade não conseguiu consultar ou atualizar dados do proprietário. Depois, o usuário testou duas contas reais no aplicativo e confirmou que uma não conseguia visualizar nem editar dados da outra. A última inspeção do Supabase encontrou duas contas, dois clientes com proprietários distintos e duas ordens. O teste E2E da demo usa dados locais; a confirmação de isolamento real veio dos testes de contas e da auditoria, não desse E2E.
+
+
+## Próximo ciclo (planejado em 2026-10-13)
+
+O MVP GF-0 a GF-7C segue encerrado. A nova trilha começa por GF-8 (recovery, segurança, backup e avaliação de infraestrutura), depois GF-9 (redesign visual, motion e gráficos úteis), GF-10 (orçamentos/PDF), GF-11 (financeiro simplificado) e GF-12 (agenda). **As funcionalidades desse ciclo ainda não estão implementadas.** Consulte [o roadmap executivo](./docs/GF-8-12-ROADMAP.md).
+
+O projeto Supabase foi reativado após pausa por inatividade e respondeu `ACTIVE_HEALTHY`, com 2 clientes e 2 ordens preservados na consulta SQL de 13/10/2026. Login/alterações pelo frontend e backup ainda requerem validação em GF-8. Azure for Students é opção de estudo, não migração autorizada. A demo segue independente do banco.
 
 ## Limitações conhecidas
 
